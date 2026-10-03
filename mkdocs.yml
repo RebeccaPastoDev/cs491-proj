@@ -1,0 +1,26 @@
+site_name: Rutgers + Rowan NASA Documentation 
+site_url: https://sitename.examples
+theme:
+  name: material
+  font:
+    text: Merriweather Sans
+  palette:
+  # Dark Mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Dark mode
+      primary: amber
+      accent: brown
+
+    # Light Mode
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Light mode
+      primary: red
+      accent: blue
+    
+    
+    # primary: red
+    # accent: blue
