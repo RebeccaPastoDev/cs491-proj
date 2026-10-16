@@ -16,7 +16,7 @@ public class RoverControllerNew : MonoBehaviour
     [SerializeField] Transform backRightTransform;
 
     [Header("Movement Settings")]
-    public float acceleration = 250f;
+    public float acceleration = 10f;
     public float breakingForce = 120f;
 
     [Header("Steering Settings")]
@@ -89,6 +89,7 @@ public class RoverControllerNew : MonoBehaviour
         // Rear wheels turn in opposite direction
         backLeft.steerAngle = -currentTurnAngle;
         backRight.steerAngle = -currentTurnAngle;
+
     }
 
     private void LateUpdate()
