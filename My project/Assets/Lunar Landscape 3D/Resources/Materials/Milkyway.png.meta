@@ -129,6 +129,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 132614
   packageName: Lunar Landscape 3D
-  packageVersion: 1.1
-  assetPath: Assets/Lunar Landscape 3D/Resources/Textures/Milkyway.png
-  uploadId: 337475
+  packageVersion: 2.0
+  assetPath: Assets/Lunar Landscape 3D/Resources/Materials/Milkyway.png
+  uploadId: 1018122
