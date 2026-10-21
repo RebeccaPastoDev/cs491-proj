@@ -1131,9 +1131,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be1fb41cdd01d7649a082f1a8f2bd114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: CesiumForUnity::CesiumForUnity.CesiumCameraManager
-  _useMainCamera: 1
+  _useMainCamera: 0
   _useSceneViewCameraInEditor: 1
-  _additionalCameras: []
+  _additionalCameras:
+  - {fileID: 4504070247898907204}
 --- !u!114 &199494392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5300,7 +5301,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961739749}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &961739752
 Camera:
   m_ObjectHideFlags: 0
@@ -10441,6 +10442,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2098643475}
   - component: {fileID: 2098643474}
+  - component: {fileID: 2100000001}
   m_Layer: 5
   m_Name: MissionControlManager
   m_TagString: Untagged
@@ -11682,3 +11684,27 @@ SceneRoots:
   - {fileID: 1272063303}
   - {fileID: 1595846187}
   - {fileID: 1968971714}
+
+--- !u!114 &2100000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098643473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eaf89d9bc3c446b9dea00a8b7c2994c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LunarAStarMission
+  rover: {fileID: 4528039020061440920}
+  destination: {fileID: 794353236}
+  batteryWh: 1
+  speed: 0.5
+  maxSlope: 20
+  cellSize: 2
+  roverRadius: 1.8
+  roverHeight: 3
+  rayHeight: 5000
+  marginCells: 8
+  pythonExecutable: /usr/bin/python3
