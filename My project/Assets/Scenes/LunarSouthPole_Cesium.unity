@@ -2869,13 +2869,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 476839588}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.09299963, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.7, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1703378510}
-  m_Father: {fileID: 2077584547}
+  m_Father: {fileID: 4528039020061440920}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &476839590
 MonoBehaviour:
@@ -7126,7 +7126,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
+  m_TargetDisplay: 2
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -13420,7 +13420,6 @@ Transform:
   - {fileID: 414359309}
   - {fileID: 1184494725}
   - {fileID: 812897083}
-  - {fileID: 476839589}
   - {fileID: 706794122}
   m_Father: {fileID: 1968971714}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
@@ -14486,7 +14485,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
+  m_TargetDisplay: 1
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -14512,6 +14511,7 @@ Transform:
   - {fileID: 2585892996186573949}
   - {fileID: 2578229798214823529}
   - {fileID: 816958544265738711}
+  - {fileID: 476839589}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4704782241767422409
