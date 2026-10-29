@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class RoverControllerNew : MonoBehaviour
@@ -36,9 +35,14 @@ public class RoverControllerNew : MonoBehaviour
     private float verticalInput;
     private float horizontalInput;
     private bool brakeInput;
+    // Prevents driving while the rover is resetting
+    private bool isResetting = false;
 
     private void Update()
     {
+        if (isResetting)
+            return;
+
         verticalInput = Input.GetAxis("Vertical");
 
         // Raw input prevents additional input smoothing
@@ -49,6 +53,9 @@ public class RoverControllerNew : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isResetting)
+            return;
+
         // ACCELERATION
         currentAcceleration = brakeInput
             ? 0f
@@ -113,5 +120,39 @@ public class RoverControllerNew : MonoBehaviour
         );
 
         wheel.SetPositionAndRotation(position, rotation);
+    }
+
+    // Called by the HUD Reset button
+    public void ResetRoverControls()
+    {
+        isResetting = true;
+
+        verticalInput = 0f;
+        horizontalInput = 0f;
+        brakeInput = false;
+
+        currentAcceleration = 0f;
+        currentBreakForce = 0f;
+        currentTurnAngle = 0f;
+
+        WheelCollider[] wheels =
+        {
+            frontRight,
+            frontLeft,
+            backRight,
+            backLeft
+        };
+
+        foreach (WheelCollider wheel in wheels)
+        {
+            if (wheel == null)
+                continue;
+
+            wheel.motorTorque = 0f;
+            wheel.brakeTorque = 0f;
+            wheel.steerAngle = 0f;
+        }
+
+        isResetting = false;
     }
 }
