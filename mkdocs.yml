@@ -2,8 +2,15 @@ site_name: Rutgers + Rowan NASA Documentation
 site_url: https://sitename.examples
 theme:
   name: material
+  icon:
+    logo: material/rocket-launch
   font:
     text: Merriweather Sans
+  features:
+    - navigation.top
+    - navigation.indexes
+    - search.suggest 
+    - content.code.copy
   palette:
   # Dark Mode
     - scheme: slate
@@ -20,7 +27,43 @@ theme:
         name: Light mode
       primary: red
       accent: blue
-    
-    
-    # primary: red
-    # accent: blue
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - Home: index.md
+  - Engineering:
+      - Overview: engineering/index.md
+      - Systems & requirements: 
+          - engineering/system-requirements/index.md
+      - Rover Design: 
+          - engineering/rover-design/index.md
+      - Electrical & power: 
+          - engineering/electrical-power/index.md
+      - Bill of materials: 
+          - engineering/bill-of-materials/index.md
+      - Integration & testing: 
+          - engineering/integration-testing/index.md
+  - Software:
+      - Overview: software/index.md
+      - Development Setup: 
+          - software/development-setup/index.md
+      - Unity Digital Twin:
+          - software/unity-digital-twin/index.md
+          - Digital twin: software/unity-digital-twin/index.md
+          - Rover physics: software/unity-digital-twin/index.md
+      - Unity VR: 
+          - software/unity-VR/unity-VR.md
+      - Path-finding algorithm: 
+          - software/path-finding-algorithm/index.md
+      - Rover UI: 
+          - software/rover-UI\index.md
+      - Rover & digital twin integration: 
+          - software/rover-digital-twin-integration/index.md
+  - Contributing guide: contributing.md
