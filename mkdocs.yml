@@ -1,5 +1,5 @@
 site_name: Rutgers + Rowan NASA Documentation 
-site_url: https://sitename.examples
+site_url: https://github.com/zaveus/cs491-proj.git
 theme:
   name: material
   icon:
