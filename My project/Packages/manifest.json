@@ -1,8 +1,9 @@
 {
   "dependencies": {
-    "com.cesium.unity": "1.26.0",
+    "com.cesium.unity": "1.26.1",
     "com.unity.ai.navigation": "2.0.11",
     "com.unity.cinemachine": "2.10.6",
+    "com.unity.cloud.gltfast": "6.20.0",
     "com.unity.collab-proxy": "2.11.4",
     "com.unity.ext.nunit": "2.0.5",
     "com.unity.ide.rider": "3.0.39",
