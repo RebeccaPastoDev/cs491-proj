@@ -39407,7 +39407,8 @@ GameObject:
   - component: {fileID: 4528039020061440920}
   - component: {fileID: 3099826810087472546}
   - component: {fileID: 929809062915581078}
-  - component: {fileID: 8732666310991699028}
+  - component: {fileID: 4528039020061440922}
+  - component: {fileID: 4528039020061440921}
   m_Layer: 0
   m_Name: RoverCleanMain
   m_TagString: Untagged
@@ -40343,6 +40344,62 @@ Transform:
   - {fileID: 476839589}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4528039020061440921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3692510859107792163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a96d70b73b4a1940969700a78d0be7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoverControllerNew
+  frontRight: {fileID: 4337606797978155613}
+  frontLeft: {fileID: 1546637956953173868}
+  backRight: {fileID: 5523991497141984646}
+  backLeft: {fileID: 8943705443695391677}
+  frontLeftTransform: {fileID: 555431946728259670}
+  backLeftTransform: {fileID: 659121531134607586}
+  frontRightTransform: {fileID: 6851114703200185414}
+  backRightTransform: {fileID: 9036251911601783122}
+  acceleration: 15
+  breakingForce: 1
+  maxTurnAngle: 8
+  steeringSpeed: 10
+  steeringReturnSpeed: 15
+  currentAcceleration: 0
+  currentBreakForce: 0
+  currentTurnAngle: 0
+--- !u!114 &4528039020061440922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3692510859107792163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ab0b8edaf8898743a362a3f05fc5e83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OldRoverScript
+  frontRight: {fileID: 4337606797978155613}
+  frontLeft: {fileID: 1546637956953173868}
+  backRight: {fileID: 5523991497141984646}
+  backLeft: {fileID: 8943705443695391677}
+  frontLeftTransform: {fileID: 555431946728259670}
+  backLeftTransform: {fileID: 659121531134607586}
+  frontRightTransform: {fileID: 6851114703200185414}
+  backRightTransform: {fileID: 9036251911601783122}
+  acceleration: 15
+  breakingForce: 1
+  maxTurnAngle: 8
+  steeringSpeed: 10
+  steeringReturnSpeed: 15
+  currentAcceleration: 0
+  currentBreakForce: 0
+  currentTurnAngle: 0
 --- !u!33 &4581447860860717842
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -43525,34 +43582,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5122030981905604936}
   m_Mesh: {fileID: -8010201013291286529, guid: e24e1673c268642448ab40f3d6c1482e, type: 3}
---- !u!114 &8732666310991699028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3692510859107792163}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a96d70b73b4a1940969700a78d0be7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RoverControllerNew
-  frontRight: {fileID: 4337606797978155613}
-  frontLeft: {fileID: 1546637956953173868}
-  backRight: {fileID: 5523991497141984646}
-  backLeft: {fileID: 8943705443695391677}
-  frontLeftTransform: {fileID: 555431946728259670}
-  backLeftTransform: {fileID: 659121531134607586}
-  frontRightTransform: {fileID: 6851114703200185414}
-  backRightTransform: {fileID: 9036251911601783122}
-  acceleration: 15
-  breakingForce: 1
-  maxTurnAngle: 8
-  steeringSpeed: 10
-  steeringReturnSpeed: 15
-  currentAcceleration: 0
-  currentBreakForce: 0
-  currentTurnAngle: 0
 --- !u!33 &8747361630826943665
 MeshFilter:
   m_ObjectHideFlags: 0
