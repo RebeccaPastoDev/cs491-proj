@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class RoverControllerNew : MonoBehaviour
@@ -20,11 +21,7 @@ public class RoverControllerNew : MonoBehaviour
 
     [Header("Steering Settings")]
     public float maxTurnAngle = 15f;
-
-    // Degrees per second
     public float steeringSpeed = 30f;
-
-    // How quickly wheels return to center
     public float steeringReturnSpeed = 40f;
 
     [Header("Current Values")]
@@ -35,8 +32,43 @@ public class RoverControllerNew : MonoBehaviour
     private float verticalInput;
     private float horizontalInput;
     private bool brakeInput;
-    // Prevents driving while the rover is resetting
     private bool isResetting = false;
+
+    // Wheel animation
+    private float[] wheelSpins = new float[4];
+    private Quaternion[] originalRotations = new Quaternion[4];
+
+    private WheelCollider[] wheelColliders;
+    private Transform[] wheelTransforms;
+
+    private void Start()
+    {
+        wheelColliders = new WheelCollider[]
+        {
+            frontLeft,
+            frontRight,
+            backLeft,
+            backRight
+        };
+
+        wheelTransforms = new Transform[]
+        {
+            frontLeftTransform,
+            frontRightTransform,
+            backLeftTransform,
+            backRightTransform
+        };
+
+        // Save the original rotation of each wheel
+        for (int i = 0; i < 4; i++)
+        {
+            if (wheelTransforms[i] != null)
+            {
+                originalRotations[i] =
+                    wheelTransforms[i].localRotation;
+            }
+        }
+    }
 
     private void Update()
     {
@@ -44,16 +76,25 @@ public class RoverControllerNew : MonoBehaviour
             return;
 
         verticalInput = Input.GetAxis("Vertical");
-
-        // Raw input prevents additional input smoothing
         horizontalInput = Input.GetAxisRaw("Horizontal");
-
         brakeInput = Input.GetKey(KeyCode.Space);
     }
 
     private void FixedUpdate()
     {
+        if (frontLeft != null)
+        {
+            Debug.Log(
+                "Front Left Grounded: " + frontLeft.isGrounded +
+                " | RPM: " + frontLeft.rpm
+            );
+        }
+
         if (isResetting)
+            return;
+
+        if (frontLeft == null || frontRight == null ||
+            backLeft == null || backRight == null)
             return;
 
         // ACCELERATION
@@ -65,6 +106,7 @@ public class RoverControllerNew : MonoBehaviour
             ? breakingForce
             : 0f;
 
+        // Apply motor torque to all four wheels
         frontRight.motorTorque = currentAcceleration;
         frontLeft.motorTorque = currentAcceleration;
         backRight.motorTorque = currentAcceleration;
@@ -89,37 +131,33 @@ public class RoverControllerNew : MonoBehaviour
             speed * Time.fixedDeltaTime
         );
 
-        // Front wheels turn together
+        // Front wheels steer together
         frontLeft.steerAngle = currentTurnAngle;
         frontRight.steerAngle = currentTurnAngle;
 
-        // Rear wheels turn in opposite direction
+        // Rear wheels steer in the opposite direction
         backLeft.steerAngle = -currentTurnAngle;
         backRight.steerAngle = -currentTurnAngle;
-
     }
 
     private void LateUpdate()
     {
-        UpdateWheel(frontLeft, frontLeftTransform);
-        UpdateWheel(frontRight, frontRightTransform);
-        UpdateWheel(backLeft, backLeftTransform);
-        UpdateWheel(backRight, backRightTransform);
-    }
+        // Animate all four wheels without changing positions
+        for (int i = 0; i < 4; i++)
+        {
+            if (wheelColliders[i] == null ||
+                wheelTransforms[i] == null)
+                continue;
 
-    private void UpdateWheel(
-        WheelCollider col,
-        Transform wheel)
-    {
-        if (col == null || wheel == null)
-            return;
+            // Convert RPM into degrees per second
+            wheelSpins[i] +=
+                wheelColliders[i].rpm * 6f * Time.deltaTime;
 
-        col.GetWorldPose(
-            out Vector3 position,
-            out Quaternion rotation
-        );
-
-        wheel.SetPositionAndRotation(position, rotation);
+            // Rotate around the local Y-axis
+            wheelTransforms[i].localRotation =
+                originalRotations[i] *
+                Quaternion.Euler(0f, wheelSpins[i], 0f);
+        }
     }
 
     // Called by the HUD Reset button
