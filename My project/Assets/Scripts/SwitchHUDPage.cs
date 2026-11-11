@@ -1,32 +1,48 @@
-using TMPro;
+
 using UnityEngine;
 
 public class SwitchHUDPage : MonoBehaviour
 {
-    public GameObject monitoringBar;
-    public GameObject missionPlanningBar;
-    public TMP_Text pageSwitchText;
-
-    private bool showingMonitoring = true;
+    [Header("HUD Pages")]
+    public GameObject monitoringPage;
+    public GameObject missionPlanningPage;
+    public GameObject missionProgressPage;
 
     void Start()
     {
-        UpdatePage();
+        ShowMonitoring();
     }
 
-    public void SwitchPage()
+    public void ShowMonitoring()
     {
-        showingMonitoring = !showingMonitoring;
-        UpdatePage();
+        ShowPage(monitoringPage);
     }
 
-    void UpdatePage()
+    public void ShowPlanning()
     {
-        monitoringBar.SetActive(showingMonitoring);
-        missionPlanningBar.SetActive(!showingMonitoring);
+        ShowPage(missionPlanningPage);
+    }
 
-        pageSwitchText.text = showingMonitoring
-            ? "MISSION PLANNING →"
-            : "← BACK TO MONITORING";
+    public void ShowProgress()
+    {
+        ShowPage(missionProgressPage);
+    }
+
+    private void ShowPage(GameObject selectedPage)
+    {
+        if (monitoringPage != null)
+            monitoringPage.SetActive(
+                monitoringPage == selectedPage
+            );
+
+        if (missionPlanningPage != null)
+            missionPlanningPage.SetActive(
+                missionPlanningPage == selectedPage
+            );
+
+        if (missionProgressPage != null)
+            missionProgressPage.SetActive(
+                missionProgressPage == selectedPage
+            );
     }
 }
