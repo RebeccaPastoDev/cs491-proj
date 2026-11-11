@@ -1,12 +1,10 @@
-
 using UnityEngine;
 
 public class SwitchHUDPage : MonoBehaviour
 {
-    [Header("HUD Pages")]
-    public GameObject monitoringPage;
-    public GameObject missionPlanningPage;
-    public GameObject missionProgressPage;
+    public GameObject monitoringBar;
+    public GameObject missionPlanningBar;
+    public GameObject missionProgressBar;
 
     void Start()
     {
@@ -15,34 +13,22 @@ public class SwitchHUDPage : MonoBehaviour
 
     public void ShowMonitoring()
     {
-        ShowPage(monitoringPage);
+        monitoringBar.SetActive(true);
+        missionPlanningBar.SetActive(false);
+        missionProgressBar.SetActive(false);
     }
 
     public void ShowPlanning()
     {
-        ShowPage(missionPlanningPage);
+        monitoringBar.SetActive(false);
+        missionPlanningBar.SetActive(true);
+        missionProgressBar.SetActive(false);
     }
 
     public void ShowProgress()
     {
-        ShowPage(missionProgressPage);
-    }
-
-    private void ShowPage(GameObject selectedPage)
-    {
-        if (monitoringPage != null)
-            monitoringPage.SetActive(
-                monitoringPage == selectedPage
-            );
-
-        if (missionPlanningPage != null)
-            missionPlanningPage.SetActive(
-                missionPlanningPage == selectedPage
-            );
-
-        if (missionProgressPage != null)
-            missionProgressPage.SetActive(
-                missionProgressPage == selectedPage
-            );
+        monitoringBar.SetActive(false);
+        missionPlanningBar.SetActive(false);
+        missionProgressBar.SetActive(true);
     }
 }

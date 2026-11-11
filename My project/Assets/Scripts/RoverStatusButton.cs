@@ -15,16 +15,16 @@ public class RoverStatusUI : MonoBehaviour
     [Header("Rover References")]
     public Transform rover;
     public Rigidbody roverRigidbody;
-    public RoverControllerNew roverController;
+    public MecanumRoverController roverController;
 
-    // Save rover's starting location
+    // Save rover's starting position and rotation
     private Vector3 startingPosition;
     private Quaternion startingRotation;
     private bool startingPositionSaved = false;
 
     void Start()
     {
-        // Remember the rover's initial position and rotation
+        // Remember initial rover position and rotation
         if (roverRigidbody != null)
         {
             startingPosition = roverRigidbody.position;
@@ -47,7 +47,7 @@ public class RoverStatusUI : MonoBehaviour
 
     void Update()
     {
-        // Live rover coordinates and heading
+        // Update rover position and heading
         if (rover != null)
         {
             Vector3 position = rover.position;
@@ -60,12 +60,11 @@ public class RoverStatusUI : MonoBehaviour
 
             if (roverHeading != null)
             {
-                float heading = rover.eulerAngles.y;
-                roverHeading.text = $"{heading:F1}°";
+                roverHeading.text = $"{rover.eulerAngles.y:F1}°";
             }
         }
 
-        // Live rover speed
+        // Update rover speed
         if (roverRigidbody != null && roverSpeed != null)
         {
             float speed = roverRigidbody.linearVelocity.magnitude;
@@ -86,9 +85,7 @@ public class RoverStatusUI : MonoBehaviour
         }
 
         if (statusDot != null)
-        {
             statusDot.color = statusColor;
-        }
     }
 
     public void StartMission()
@@ -109,22 +106,18 @@ public class RoverStatusUI : MonoBehaviour
 
     public void ResetMission()
     {
-        // Reset wheel controls
-        if (roverController != null)
+        // Stop rover movement
+        if (roverRigidbody != null)
         {
-            roverController.ResetRoverControls();
+            roverRigidbody.linearVelocity = Vector3.zero;
+            roverRigidbody.angularVelocity = Vector3.zero;
         }
 
-        // Reset rover position and movement
+        // Restore starting position and rotation
         if (startingPositionSaved)
         {
             if (roverRigidbody != null)
             {
-                // Stop all movement
-                roverRigidbody.linearVelocity = Vector3.zero;
-                roverRigidbody.angularVelocity = Vector3.zero;
-
-                // Return to starting location
                 roverRigidbody.position = startingPosition;
                 roverRigidbody.rotation = startingRotation;
             }
@@ -141,8 +134,6 @@ public class RoverStatusUI : MonoBehaviour
         SetStatus(false);
 
         if (missionProgress != null)
-        {
             missionProgress.text = "Not started";
-        }
     }
 }
