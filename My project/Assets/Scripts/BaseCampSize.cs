@@ -2,30 +2,29 @@ using UnityEngine;
 
 public class BaseCampSize : MonoBehaviour
 {
-    [ContextMenu("Measure Base Camp")]
-    public void MeasureBaseCamp()
+    [ContextMenu("Calculate Base Camp Size")]
+    public void CalculateSize()
     {
-        Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
 
         if (renderers.Length == 0)
         {
-            Debug.LogWarning("No renderers found.");
+            Debug.LogWarning("No renderers found in Base Camp.");
             return;
         }
 
         Bounds bounds = renderers[0].bounds;
 
-        foreach (Renderer r in renderers)
+        for (int i = 1; i < renderers.Length; i++)
         {
-            bounds.Encapsulate(r.bounds);
+            bounds.Encapsulate(renderers[i].bounds);
         }
 
         Debug.Log(
-            $"BASE CAMP SIZE:\n" +
-            $"Width (X): {bounds.size.x:F2} meters\n" +
-            $"Height (Y): {bounds.size.y:F2} meters\n" +
-            $"Length (Z): {bounds.size.z:F2} meters\n" +
-            $"Center: {bounds.center}"
+            $"BASE CAMP SIZE\n" +
+            $"Width (X): {bounds.size.x:F2} units\n" +
+            $"Height (Y): {bounds.size.y:F2} units\n" +
+            $"Length (Z): {bounds.size.z:F2} units"
         );
     }
 }
