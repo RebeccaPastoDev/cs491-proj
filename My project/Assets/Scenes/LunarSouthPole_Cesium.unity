@@ -2020,7 +2020,6 @@ Transform:
   - {fileID: 2077584547}
   - {fileID: 213386537}
   - {fileID: 4528039020061440920}
-  - {fileID: 1809207290}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &95470390
@@ -36038,7 +36037,6 @@ GameObject:
   - component: {fileID: 1686150546}
   - component: {fileID: 1686150547}
   - component: {fileID: 1686150548}
-  - component: {fileID: 1686150549}
   m_Layer: 0
   m_Name: FlexiRover_Controller
   m_TagString: Untagged
@@ -36061,6 +36059,7 @@ Transform:
   m_Children:
   - {fileID: 1532733779}
   - {fileID: 1140568134966498827}
+  - {fileID: 1809207290}
   - {fileID: 1080039783}
   - {fileID: 1015399720}
   m_Father: {fileID: 0}
@@ -36134,27 +36133,6 @@ MonoBehaviour:
   animateWheels: 1
   wheelRadius: 0.25
   wheelAnimationMultiplier: 1
---- !u!65 &1686150549
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1686150543}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 4, y: 3.2, z: 6}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1689215471
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38076,7 +38054,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.05942949, y: 0.99496585, z: -0.02490599, w: 0.07675164}
   m_LocalPosition: {x: 0.004022933, y: 0.90774524, z: 0.0065312386}
-  m_LocalScale: {x: 1.0000069, y: 1, z: 1.0000069}
+  m_LocalScale: {x: 1.0000073, y: 1, z: 1.0000073}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 199494393}
@@ -38097,9 +38075,9 @@ MonoBehaviour:
   _detectTransformChanges: 1
   _localToGlobeFixedMatrix:
     c0:
-      x: -0.8898565030979865
-      y: 0.4405131153892926
-      z: 0.1188163169546727
+      x: -0.8898568213333087
+      y: 0.4405132729279888
+      z: 0.11881635944641016
       w: 0
     c1:
       x: -0.09793750815709346
@@ -38107,9 +38085,9 @@ MonoBehaviour:
       z: -0.9927330159385531
       w: 0
     c2:
-      x: 0.4456200581277038
-      y: 0.895026504151962
-      z: 0.01907980993189841
+      x: 0.44562021749277253
+      y: 0.895026824236208
+      z: 0.0190798167553238
       w: 0
     c3:
       x: -11313.626716083414
@@ -38211,7 +38189,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1809207290
 Transform:
   m_ObjectHideFlags: 0
@@ -38221,11 +38199,11 @@ Transform:
   m_GameObject: {fileID: 1809207289}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 54938.613, y: 1187.941, z: 62999.49}
+  m_LocalPosition: {x: 644.86, y: -21.28, z: -1958.36}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 85450083}
+  m_Father: {fileID: 1686150544}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1809207291
 BoxCollider:
@@ -38246,7 +38224,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4, y: 3.2, z: 6}
+  m_Size: {x: 8, y: 6, z: 6}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1824022742
 GameObject:
