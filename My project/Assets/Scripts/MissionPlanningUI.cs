@@ -17,7 +17,6 @@ public class MissionPlanningUI : MonoBehaviour
 
     [Header("Progress UI")]
     public TMP_Text routeOverviewText;
-    public TMP_Text taskStatusText;
     public TMP_Text progressText;
 
     [Header("Navigation")]
@@ -27,6 +26,7 @@ public class MissionPlanningUI : MonoBehaviour
 
     void Start()
     {
+        // Listen for task selection changes
         findWaterToggle.onValueChanged.AddListener(
             value => UpdateAssignedTasks());
 
@@ -39,8 +39,10 @@ public class MissionPlanningUI : MonoBehaviour
         returnToBaseToggle.onValueChanged.AddListener(
             value => UpdateAssignedTasks());
 
+        // Assign mission button
         assignMissionButton.onClick.AddListener(AssignMission);
 
+        // Initialize assigned tasks
         UpdateAssignedTasks();
     }
 
@@ -48,6 +50,7 @@ public class MissionPlanningUI : MonoBehaviour
     {
         selectedTasks.Clear();
 
+        // Add selected tasks in mission order
         if (findWaterToggle.isOn)
             selectedTasks.Add("Find Water");
 
@@ -60,6 +63,7 @@ public class MissionPlanningUI : MonoBehaviour
         if (returnToBaseToggle.isOn)
             selectedTasks.Add("Return to Base");
 
+        // Update Planning page
         if (selectedTasks.Count == 0)
         {
             assignedTasksText.text = "No tasks selected";
@@ -75,6 +79,7 @@ public class MissionPlanningUI : MonoBehaviour
             }
         }
 
+        // Disable assignment when no tasks are selected
         assignMissionButton.interactable =
             selectedTasks.Count > 0;
     }
@@ -84,7 +89,9 @@ public class MissionPlanningUI : MonoBehaviour
         if (selectedTasks.Count == 0)
             return;
 
+        // Build route overview
         List<string> destinations = new List<string>();
+
         destinations.Add("Base Camp");
 
         if (findWaterToggle.isOn)
@@ -99,23 +106,23 @@ public class MissionPlanningUI : MonoBehaviour
         if (returnToBaseToggle.isOn)
             destinations.Add("Base Camp");
 
-        routeOverviewText.text =
-            string.Join(" → ", destinations);
-
-        if (taskStatusText != null)
+        // Update Progress page route
+        if (routeOverviewText != null)
         {
-            taskStatusText.text = "";
-
-            for (int i = 0; i < selectedTasks.Count; i++)
-            {
-                taskStatusText.text +=
-                    $"{i + 1:00} {selectedTasks[i]} - Pending\n";
-            }
+            routeOverviewText.text =
+                string.Join("\n    ↓\n", destinations);
         }
 
+        // Reset mission progress display
         if (progressText != null)
+        {
             progressText.text = "Assigned - Not started";
+        }
 
-        pageSwitcher.ShowProgress();
+        // Automatically open Mission Progress page
+        if (pageSwitcher != null)
+        {
+            pageSwitcher.ShowProgress();
+        }
     }
 }
