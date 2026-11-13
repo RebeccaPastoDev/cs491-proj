@@ -1,10 +1,11 @@
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class RoverStatusUI : MonoBehaviour
 {
-    [Header("UI References")]
+    [Header("Desktop UI References")]
     public TMP_Text roverStatus;
     public TMP_Text roverPosition;
     public TMP_Text roverSpeed;
@@ -12,19 +13,25 @@ public class RoverStatusUI : MonoBehaviour
     public Image statusDot;
     public TMP_Text missionProgress;
 
+    [Header("VR UI References")]
+    public TMP_Text vrRoverStatus;
+    public TMP_Text vrRoverPosition;
+    public TMP_Text vrRoverSpeed;
+    public TMP_Text vrRoverHeading;
+    public Image vrStatusDot;
+    public TMP_Text vrMissionProgress;
+
     [Header("Rover References")]
     public Transform rover;
     public Rigidbody roverRigidbody;
-    public RoverControllerNew roverController;
+    public MecanumRoverController roverController;
 
-    // Save rover's starting location
     private Vector3 startingPosition;
     private Quaternion startingRotation;
-    private bool startingPositionSaved = false;
+    private bool startingPositionSaved;
 
     void Start()
     {
-        // Remember the rover's initial position and rotation
         if (roverRigidbody != null)
         {
             startingPosition = roverRigidbody.position;
@@ -38,93 +45,93 @@ public class RoverStatusUI : MonoBehaviour
             startingPositionSaved = true;
         }
 
-        // Initialize HUD
         SetStatus(false);
-
-        if (missionProgress != null)
-            missionProgress.text = "Not started";
+        SetProgress("Not started");
     }
 
     void Update()
     {
-        // Live rover coordinates and heading
         if (rover != null)
         {
             Vector3 position = rover.position;
+            string positionText =
+                $"X: {position.x:F2}  Y: {position.y:F2}  Z: {position.z:F2}";
+            string headingText = $"{rover.eulerAngles.y:F1}°";
 
-            if (roverPosition != null)
-            {
-                roverPosition.text =
-                    $"X: {position.x:F2}  Y: {position.y:F2}  Z: {position.z:F2}";
-            }
-
-            if (roverHeading != null)
-            {
-                float heading = rover.eulerAngles.y;
-                roverHeading.text = $"{heading:F1}°";
-            }
+            SetText(roverPosition, vrRoverPosition, positionText);
+            SetText(roverHeading, vrRoverHeading, headingText);
         }
 
-        // Live rover speed
-        if (roverRigidbody != null && roverSpeed != null)
+        if (roverRigidbody != null)
         {
-            float speed = roverRigidbody.linearVelocity.magnitude;
-            roverSpeed.text = $"{speed:F2} m/s";
+            string speedText =
+                $"{roverRigidbody.linearVelocity.magnitude:F2} m/s";
+
+            SetText(roverSpeed, vrRoverSpeed, speedText);
         }
+    }
+
+    void SetText(TMP_Text desktop, TMP_Text vr, string value)
+    {
+        if (desktop != null)
+            desktop.text = value;
+
+        if (vr != null)
+            vr.text = value;
     }
 
     void SetStatus(bool online)
     {
-        Color statusColor = online
+        Color color = online
             ? new Color32(119, 201, 154, 255)
             : new Color32(242, 200, 121, 255);
 
+        string status = online ? "Online" : "Standby";
+
+        SetText(roverStatus, vrRoverStatus, status);
+
         if (roverStatus != null)
-        {
-            roverStatus.text = online ? "Online" : "Standby";
-            roverStatus.color = statusColor;
-        }
+            roverStatus.color = color;
+
+        if (vrRoverStatus != null)
+            vrRoverStatus.color = color;
 
         if (statusDot != null)
-        {
-            statusDot.color = statusColor;
-        }
+            statusDot.color = color;
+
+        if (vrStatusDot != null)
+            vrStatusDot.color = color;
+    }
+
+    public void SetProgress(string value)
+    {
+        SetText(missionProgress, vrMissionProgress, value);
     }
 
     public void StartMission()
     {
         SetStatus(true);
-
-        if (missionProgress != null)
-            missionProgress.text = "In progress";
+        SetProgress("In progress");
     }
 
     public void PauseMission()
     {
         SetStatus(false);
-
-        if (missionProgress != null)
-            missionProgress.text = "Paused";
+        SetProgress("Paused");
     }
 
     public void ResetMission()
     {
-        // Reset wheel controls
-        if (roverController != null)
+        if (roverRigidbody != null)
         {
-            roverController.ResetRoverControls();
+            roverRigidbody.linearVelocity = Vector3.zero;
+            roverRigidbody.angularVelocity = Vector3.zero;
         }
 
-        // Reset rover position and movement
         if (startingPositionSaved)
         {
             if (roverRigidbody != null)
             {
-                // Stop all movement
-                roverRigidbody.linearVelocity = Vector3.zero;
-                roverRigidbody.angularVelocity = Vector3.zero;
-
-                // Return to starting location
                 roverRigidbody.position = startingPosition;
                 roverRigidbody.rotation = startingRotation;
             }
@@ -137,12 +144,7 @@ public class RoverStatusUI : MonoBehaviour
             }
         }
 
-        // Reset HUD
         SetStatus(false);
-
-        if (missionProgress != null)
-        {
-            missionProgress.text = "Not started";
-        }
+        SetProgress("Not started");
     }
 }
