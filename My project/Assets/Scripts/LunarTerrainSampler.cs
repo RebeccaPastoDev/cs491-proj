@@ -2,7 +2,8 @@ using UnityEngine;
 using Unity.Mathematics; //Double3FunctionForStoringCoords
 using CesiumForUnity;
 using System.Threading.Tasks;
-using UnityEngine.UIElements; //TerrainSamplingFunctions
+using UnityEngine.UIElements;
+using Unity.VisualScripting; //TerrainSamplingFunctions
 
 
 public class LunarTerrainSampler : MonoBehaviour
@@ -56,6 +57,41 @@ LunarNode[] nodes = graphGenerator.GenerateGraph(grid, gridDimension);
 Debug.Log("Total Nodes: " + nodes.Length);
 Debug.Log("Corner node edges: " + nodes[0].edges.Count);
 Debug.Log("Center node edges: " + nodes[5100].edges.Count);
+
+LunarNode center = nodes[5100];
+
+foreach (LunarEdge edge in center.edges)
+{
+    Debug.Log(
+        "Neighbor Row: " + edge.destination.row +
+        " | Neighbor Col: " + edge.destination.col +
+        " | Horizontal Distance: " + edge.horizontalDistance + " meters" +
+        " | Slope: " + edge.slopeDegrees + " degrees" +
+        " | Edge Cost: " + edge.cost
+    );
+}
+
+int traversableEdges = 0;
+int blockedEdges = 0;
+
+
+foreach (LunarNode node in nodes)
+{
+    foreach (LunarEdge edge in node.edges)
+    {
+        if (edge.traversable)
+        {
+            traversableEdges++;
+        }
+        else
+        {
+            blockedEdges++;
+        }
+    }
+}
+
+Debug.Log("Traversable edges: " + traversableEdges);
+Debug.Log("Blocked edges: " + blockedEdges);
 
     }
 
@@ -156,4 +192,7 @@ for (int start = 0; start < grid.Length; start += batchSize)
     }
 
   
+
+
+
 }

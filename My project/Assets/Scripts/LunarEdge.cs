@@ -10,3 +10,5 @@ public class LunarEdge
     public double horizontalDistance;
     public double slopeDegrees;
 }
+
+
