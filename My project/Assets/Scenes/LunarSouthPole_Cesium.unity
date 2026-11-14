@@ -10066,6 +10066,83 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 496325957}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &501156038
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 501156041}
+  - component: {fileID: 501156040}
+  - component: {fileID: 501156039}
+  m_Layer: 0
+  m_Name: ROSIntegration
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &501156039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501156038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79096e8d67842114fb0aaa6319132115, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ROSHUD
+  rosReceiver: {fileID: 501156040}
+  rover: {fileID: 1686150544}
+  roverRigidbody: {fileID: 1686150546}
+  positionText: {fileID: 1246909299}
+  speedText: {fileID: 1040247432}
+  headingText: {fileID: 193010063}
+  vrPositionText: {fileID: 345097206}
+  vrSpeedText: {fileID: 4690799}
+  vrHeadingText: {fileID: 2055711926}
+  useROSWhenAvailable: 1
+--- !u!114 &501156040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501156038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 450dcbabb44f30a41988befa9fce9a1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoverROSTelemetryReceiver
+  odometryTopic: /odom_raw
+  telemetryTimeout: 3
+  logReceivedData: 1
+  logInterval: 1
+  hasReceivedData: 0
+  telemetryActive: 0
+  rosPosition: {x: 0, y: 0, z: 0}
+  rosSpeed: 0
+  rosHeading: 0
+  rosAngularSpeed: 0
+--- !u!4 &501156041
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501156038}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 648.0161, y: -21.36304, z: -1955.3635}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &504541880
 GameObject:
   m_ObjectHideFlags: 0
@@ -28135,15 +28212,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoverStatusUI
   roverStatus: {fileID: 2092221163}
-  roverPosition: {fileID: 1246909299}
-  roverSpeed: {fileID: 1040247432}
-  roverHeading: {fileID: 193010063}
+  roverPosition: {fileID: 0}
+  roverSpeed: {fileID: 0}
+  roverHeading: {fileID: 0}
   statusDot: {fileID: 514874920}
   missionProgress: {fileID: 1213768688}
   vrRoverStatus: {fileID: 2004766224}
-  vrRoverPosition: {fileID: 345097206}
-  vrRoverSpeed: {fileID: 4690799}
-  vrRoverHeading: {fileID: 2055711926}
+  vrRoverPosition: {fileID: 0}
+  vrRoverSpeed: {fileID: 0}
+  vrRoverHeading: {fileID: 0}
   vrStatusDot: {fileID: 2102071911}
   vrMissionProgress: {fileID: 1226093831}
   rover: {fileID: 1686150544}
@@ -39731,7 +39808,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.05942949, y: 0.99496585, z: -0.02490599, w: 0.07675164}
   m_LocalPosition: {x: 0.004022933, y: 0.90774524, z: 0.0065312386}
-  m_LocalScale: {x: 1.0000099, y: 1, z: 1.0000099}
+  m_LocalScale: {x: 1.0000107, y: 1, z: 1.0000107}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 199494393}
@@ -39752,9 +39829,9 @@ MonoBehaviour:
   _detectTransformChanges: 1
   _localToGlobeFixedMatrix:
     c0:
-      x: -0.8898591550590049
-      y: 0.44051442821176023
-      z: 0.1188166710524849
+      x: -0.8898598976080901
+      y: 0.4405147958020511
+      z: 0.11881677019987232
       w: 0
     c1:
       x: -0.09793750815709346
@@ -39762,9 +39839,9 @@ MonoBehaviour:
       z: -0.9927330159385531
       w: 0
     c2:
-      x: 0.44562138616994335
-      y: 0.8950291715206795
-      z: 0.019079866793776705
+      x: 0.4456217580217704
+      y: 0.8950299183839205
+      z: 0.019079882715102622
       w: 0
     c3:
       x: -11313.626716083414
@@ -56525,5 +56602,6 @@ SceneRoots:
   - {fileID: 384523137}
   - {fileID: 794353236}
   - {fileID: 1968971714}
+  - {fileID: 501156041}
   - {fileID: 1686150544}
   - {fileID: 85450083}
