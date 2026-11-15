@@ -3,10 +3,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class MecanumRoverController : MonoBehaviour
 {
-    [Header("Rover Movement")]
+    [Header("Movement Settings")]
     public float moveSpeed = 5f;
-    public float rotationSpeed = 45f;
     public float acceleration = 4f;
+    public float rotationSpeed = 45f;
 
     [Header("Wheel Meshes")]
     public Transform frontLeft;
@@ -20,10 +20,15 @@ public class MecanumRoverController : MonoBehaviour
     public float wheelAnimationMultiplier = 1f;
 
     private Rigidbody rb;
-    private float forwardInput;
-    private float sidewaysInput;
-    private float rotationInput;
-    private float currentForward;
+
+    private float speed;
+    private float strafe;
+    private float turn;
+
+    private float frontLeftSpeed;
+    private float frontRightSpeed;
+    private float rearLeftSpeed;
+    private float rearRightSpeed;
 
     void Awake()
     {
@@ -32,84 +37,135 @@ public class MecanumRoverController : MonoBehaviour
 
     void Update()
     {
-        // Keyboard movement controls
-        forwardInput = 0f;
-        sidewaysInput = 0f;
-        rotationInput = 0f;
+        speed = 0f;
+        strafe = 0f;
+        turn = 0f;
 
-        if (Input.GetKey(KeyCode.W)) forwardInput += 1f;
-        if (Input.GetKey(KeyCode.S)) forwardInput -= 1f;
-        if (Input.GetKey(KeyCode.D)) sidewaysInput += 1f;
-        if (Input.GetKey(KeyCode.A)) sidewaysInput -= 1f;
-        if (Input.GetKey(KeyCode.E)) rotationInput += 1f;
-        if (Input.GetKey(KeyCode.Q)) rotationInput -= 1f;
+        // Forward / backward
+        if (Input.GetKey(KeyCode.W)) speed += 1f;
+        if (Input.GetKey(KeyCode.S)) speed -= 1f;
+
+        // Sideways movement
+        if (Input.GetKey(KeyCode.D)) strafe += 1f;
+        if (Input.GetKey(KeyCode.A)) strafe -= 1f;
+
+        // Rotation in place
+        if (Input.GetKey(KeyCode.E)) turn += 1f;
+        if (Input.GetKey(KeyCode.Q)) turn -= 1f;
+
+        // Normalize diagonal movement.
+        Vector2 input = Vector2.ClampMagnitude(
+            new Vector2(strafe, speed), 1f
+        );
+
+        strafe = input.x;
+        speed = input.y;
+
+        CalculateWheelSpeeds();
+    }
+
+    void CalculateWheelSpeeds()
+    {
+        // Method 1: Direct mecanum wheel mixing.
+        // Standard X roller configuration.
+
+        frontLeftSpeed = speed + strafe + turn;
+        frontRightSpeed = speed - strafe - turn;
+
+        rearLeftSpeed = speed - strafe + turn;
+        rearRightSpeed = speed + strafe - turn;
+
+        // Normalize wheel commands.
+        float max = Mathf.Max(
+            1f,
+            Mathf.Abs(frontLeftSpeed),
+            Mathf.Abs(frontRightSpeed),
+            Mathf.Abs(rearLeftSpeed),
+            Mathf.Abs(rearRightSpeed)
+        );
+
+        frontLeftSpeed /= max;
+        frontRightSpeed /= max;
+        rearLeftSpeed /= max;
+        rearRightSpeed /= max;
     }
 
     void FixedUpdate()
     {
         MoveRover();
-        AnimateWheels();
+        RotateRover();
+
+        if (animateWheels)
+            AnimateWheels();
     }
 
     void MoveRover()
     {
-        // Forward, backward, and sideways movement
-        Vector3 direction = transform.forward * forwardInput + transform.right * sidewaysInput;
-        direction = Vector3.ClampMagnitude(direction, 1f);
+        Vector3 direction =
+            transform.forward * speed +
+            transform.right * strafe;
 
         Vector3 targetVelocity = direction * moveSpeed;
+
         Vector3 currentVelocity = rb.linearVelocity;
 
-        // Preserve vertical velocity for gravity
-        Vector3 verticalVelocity = Vector3.Project(currentVelocity, transform.up);
-        Vector3 horizontalVelocity = currentVelocity - verticalVelocity;
+        // Preserve lunar gravity.
+        Vector3 verticalVelocity =
+            Vector3.Project(currentVelocity, Vector3.up);
 
-        // Smooth acceleration and deceleration
+        Vector3 horizontalVelocity =
+            currentVelocity - verticalVelocity;
+
         Vector3 newHorizontalVelocity = Vector3.MoveTowards(
             horizontalVelocity,
             targetVelocity,
             acceleration * Time.fixedDeltaTime
         );
 
-        rb.linearVelocity = newHorizontalVelocity + verticalVelocity;
+        rb.linearVelocity =
+            newHorizontalVelocity + verticalVelocity;
+    }
 
-        // Rotate rover body without steering wheels
-        rb.MoveRotation(
-            rb.rotation * Quaternion.Euler(
-                0f,
-                rotationInput * rotationSpeed * Time.fixedDeltaTime,
-                0f
-            )
-        );
+    void RotateRover()
+    {
+        if (Mathf.Abs(turn) < 0.01f)
+            return;
 
-        // Get actual forward movement speed
-        Vector3 localVelocity = transform.InverseTransformDirection(newHorizontalVelocity);
-        currentForward = localVelocity.z;
+        float angle =
+            turn * rotationSpeed * Time.fixedDeltaTime;
+
+        Quaternion newRotation =
+            Quaternion.AngleAxis(angle, Vector3.up)
+            * rb.rotation;
+
+        rb.MoveRotation(newRotation);
     }
 
     void AnimateWheels()
     {
-        if (!animateWheels) return;
-
-        float radius = Mathf.Max(wheelRadius, 0.001f);
-        float wheelSpeed = currentForward / radius;
-
-        // Spin wheels using the parent rover's actual right axis in world space
-        Vector3 spinAxis = transform.right;
-
-        SpinWheel(frontLeft, wheelSpeed, spinAxis);
-        SpinWheel(frontRight, wheelSpeed, spinAxis);
-        SpinWheel(rearLeft, wheelSpeed, spinAxis);
-        SpinWheel(rearRight, wheelSpeed, spinAxis);
+        SpinWheel(frontLeft, frontLeftSpeed);
+        SpinWheel(frontRight, frontRightSpeed);
+        SpinWheel(rearLeft, rearLeftSpeed);
+        SpinWheel(rearRight, rearRightSpeed);
     }
 
-    void SpinWheel(Transform wheel, float angularSpeed, Vector3 axis)
+    void SpinWheel(Transform wheel, float wheelSpeed)
     {
-        if (wheel == null) return;
+        if (wheel == null)
+            return;
 
-        float angle = angularSpeed * Mathf.Rad2Deg * Time.fixedDeltaTime * wheelAnimationMultiplier;
+        float radius = Mathf.Max(wheelRadius, 0.001f);
 
-        // Rotate around the precise global horizontal axis of the rover body
-        wheel.Rotate(axis, angle, Space.World);
+        float angle =
+            (wheelSpeed * moveSpeed / radius) *
+            Mathf.Rad2Deg *
+            Time.fixedDeltaTime *
+            wheelAnimationMultiplier;
+
+        wheel.Rotate(
+            transform.right,
+            angle,
+            Space.World
+        );
     }
 }
