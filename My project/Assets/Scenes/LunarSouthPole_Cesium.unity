@@ -1359,7 +1359,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5000001
   m_Height: 2
@@ -17112,7 +17112,7 @@ Transform:
   m_GameObject: {fileID: 741423972}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 132.5, y: -3.85, z: -127.4}
+  m_LocalPosition: {x: 132.5, y: -4.156, z: -127.4}
   m_LocalScale: {x: 0.5, y: 0.25, z: 0.35}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19005,7 +19005,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 400000, guid: 6b436d069d11415d1100ab9b44295342, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1844819315}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 6b436d069d11415d1100ab9b44295342, type: 3}
       insertIndex: -1
@@ -34694,12 +34697,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f205cbdcec3caee46956bb4ba7ea8bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoverCameraView
-  turnSpeed: 80
-  lookSpeed: 60
-  minPitch: -60
-  maxPitch: 60
-  yaw: 0
-  pitch: 0
 --- !u!1 &1534057568
 GameObject:
   m_ObjectHideFlags: 0
@@ -41118,7 +41115,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.05942949, y: 0.99496585, z: -0.02490599, w: 0.07675164}
   m_LocalPosition: {x: 0.004022933, y: 0.90774524, z: 0.0065312386}
-  m_LocalScale: {x: 1.0000129, y: 1, z: 1.0000129}
+  m_LocalScale: {x: 1.0000131, y: 1, z: 1.0000131}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 199494393}
@@ -41139,9 +41136,9 @@ MonoBehaviour:
   _detectTransformChanges: 1
   _localToGlobeFixedMatrix:
     c0:
-      x: -0.8898618070200235
-      y: 0.4405157410342277
-      z: 0.11881702515029713
+      x: -0.8898620191769048
+      y: 0.44051584606002514
+      z: 0.1188170534781221
       w: 0
     c1:
       x: -0.09793750815709346
@@ -41149,9 +41146,9 @@ MonoBehaviour:
       z: -0.9927330159385531
       w: 0
     c2:
-      x: 0.44562271421218286
-      y: 0.8950318388893972
-      z: 0.019079923655654998
+      x: 0.445622820455562
+      y: 0.8950320522788946
+      z: 0.01907992820460526
       w: 0
     c3:
       x: -11313.626716083414
@@ -41777,6 +41774,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.272136, y: 1.0038302, z: 1.8303347}
   m_Center: {x: 0.114533335, y: 0.42822635, z: -0.03345651}
+--- !u!1 &1844819314
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1844819315}
+  m_Layer: 4
+  m_Name: DockTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1844819315
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1844819314}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0.006, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1349342558}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1845888149
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42940,7 +42968,7 @@ Transform:
   m_GameObject: {fileID: 1876798352}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 68.75836, y: -2.685, z: -31.4402}
+  m_LocalPosition: {x: 68.75836, y: -2.963, z: -31.4402}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
