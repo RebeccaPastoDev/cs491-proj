@@ -50,10 +50,9 @@ nav:
           - engineering/bill-of-materials/index.md
       - Integration & testing: 
           - engineering/integration-testing/index.md
-  - Software:
+    - Software:
       - Overview: software/index.md
-      - Development Setup: 
-          - software/development-setup/index.md
+      - Development Setup: software/development-setup/development-setup.md
       - Unity Digital Twin:
           - software/unity-digital-twin/index.md
           - Digital twin: software/unity-digital-twin/index.md
