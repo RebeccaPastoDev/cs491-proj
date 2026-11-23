@@ -50,13 +50,13 @@ nav:
           - engineering/bill-of-materials/index.md
       - Integration & testing: 
           - engineering/integration-testing/index.md
-    - Software:
+  - Software:
       - Overview: software/index.md
-      - Development Setup: software/development-setup/development-setup.md
+      - Development Setup: software/development-setup/index.md
       - Unity Digital Twin:
-          - software/unity-digital-twin/index.md
-          - Digital twin: software/unity-digital-twin/index.md
-          - Rover physics: software/unity-digital-twin/index.md
+          - Overview: software/unity-digital-twin/index.md
+          - Digital twin: software/unity-digital-twin/digital-twin.md
+          - Rover physics: software/unity-digital-twin/rover-physics.md
       - Unity VR: 
           - software/unity-VR/unity-VR.md
       - Path-finding algorithm: 
