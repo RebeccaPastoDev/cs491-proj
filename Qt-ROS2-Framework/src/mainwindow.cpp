@@ -9,10 +9,10 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle(tr("Lunar Rover UI"));
     resize(800, 700);
 
-    m_guiManager = new GUIManager(this);
+    m_simulationBridge = new SimulationBridge(this);
+    m_guiManager = new GUIManager(m_simulationBridge, this);
     m_splashScreen = new SplashScreen(this);
     m_backButton = nullptr;
-    m_simulationBridge = new SimulationBridge(this);
 
     // create stacked widget for screen management
     m_stackedWidget = new QStackedWidget(this);

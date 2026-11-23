@@ -14,8 +14,12 @@ class StatusSection : public QFrame
 public:
     explicit StatusSection(QWidget *parent = nullptr);
 
+public slots:
+    void updateBattery(double value);
+
 private:
     void setupStatusLayout();
+    QLabel *m_batteryLabel; 
 };
 
 }

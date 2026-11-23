@@ -29,16 +29,18 @@ int main(int argc, char *argv[])
 
     LunarRoverUI::MainWindow mainWindow;
     // Initialize micro-ROS connection
+    // Initialize ROS 2 subscriptions for the rover
     auto bridge = mainWindow.getSimulationBridge();
+
     if (bridge) {
-        // Try to connect to micro-ROS
-        if (!bridge->connectToMicroROS("your_wifi_ssid", "your_wifi_password",
-                                      "192.168.1.100", 8090)) {
-            QMessageBox::warning(nullptr, "Connection Error",
-                               "Failed to connect to Micro-ROS agent. "
-                               "Please check your WiFi credentials and agent IP.");
-        }
+        if (!bridge->connectToRover("172.20.10.2", 8090)) {
+            QMessageBox::warning(
+            nullptr,
+            "ROS 2 Connection Error",
+            "Failed to initialize ROS 2 communication."
+        );
     }
+}
 
     mainWindow.show();
 

@@ -15,7 +15,7 @@ class GUIManager : public QObject
     Q_OBJECT
 
 public:
-    explicit GUIManager(QObject *parent = nullptr);
+    explicit GUIManager(SimulationBridge *bridge, QObject *parent = nullptr);
     QWidget* createUI(QWidget *parent);
     void selectRover(int roverId);
 

@@ -9,6 +9,7 @@
 
 #ifdef MICRO_ROS_SUPPORT
 #include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/u_int16.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <sensor_msgs/msg/battery_state.hpp>
@@ -64,7 +65,7 @@ private:
 #ifdef MICRO_ROS_SUPPORT
     void onOdometryReceived(const nav_msgs::msg::Odometry::SharedPtr msg);
     void onTwistMessage(const geometry_msgs::msg::Twist::SharedPtr msg);
-    void onBatteryReceived(const sensor_msgs::msg::BatteryState::SharedPtr msg);
+    void onBatteryReceived(const std_msgs::msg::UInt16::SharedPtr msg);
     void onCameraFrameReceived(const sensor_msgs::msg::CompressedImage::SharedPtr msg);
     void onImuReceived(const sensor_msgs::msg::Imu::SharedPtr msg);
 #endif
@@ -78,7 +79,7 @@ private:
     rclcpp::Node::SharedPtr m_node;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr m_twist_pub;
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr m_odom_sub;
-    rclcpp::Subscription<sensor_msgs::msg::BatteryState>::SharedPtr m_battery_sub;
+    rclcpp::Subscription<std_msgs::msg::UInt16>::SharedPtr m_battery_sub;
     rclcpp::Subscription<sensor_msgs::msg::CompressedImage>::SharedPtr m_camera_sub;
     rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr m_imu_sub;
     

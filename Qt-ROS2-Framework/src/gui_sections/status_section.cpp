@@ -21,15 +21,22 @@ void StatusSection::setupStatusLayout()
     statusLayout->setSpacing(20);
 
     // battery status
-    QLabel *batteryLabel = new QLabel(tr("Battery: 100%"), this);
-    batteryLabel->setObjectName("batteryLabel");
+    m_batteryLabel = new QLabel(tr("Battery: -- (waiting for data)"), this);
+    m_batteryLabel->setObjectName("batteryLabel");
 
     // connection status
     QLabel *connectionLabel = new QLabel(tr("Connection: Connected to LunarNet"), this);
     connectionLabel->setObjectName("connectionLabel");
 
-    statusLayout->addWidget(batteryLabel);
+    statusLayout->addWidget(m_batteryLabel);
     statusLayout->addWidget(connectionLabel);
+}
+
+void StatusSection::updateBattery(double value)
+{
+    m_batteryLabel->setText(
+        QString("Battery (raw): %1").arg(value, 0, 'f', 0)
+    );
 }
 
 }

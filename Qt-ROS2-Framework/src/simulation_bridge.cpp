@@ -56,12 +56,12 @@ bool SimulationBridge::connectToRover(const std::string &agentIP, int agentPort)
         );
 
         // Subscriber: Receive battery status from ESP32
-        m_battery_sub = m_node->create_subscription<sensor_msgs::msg::BatteryState>(
-            "battery_state", rclcpp::QoS(10).best_effort(),
-            [this](const sensor_msgs::msg::BatteryState::SharedPtr msg) {
-                this->onBatteryReceived(msg);
-            }
-        );
+        m_battery_sub = m_node->create_subscription<std_msgs::msg::UInt16>(
+   	     "battery", rclcpp::QoS(10).best_effort(),
+    	     [this](const std_msgs::msg::UInt16::SharedPtr msg) {
+             this->onBatteryReceived(msg);
+             }
+	);
 
         // Subscriber: Receive camera feed from ESP32-CAM (Yahboom uses /esp32_img)
         m_camera_sub = m_node->create_subscription<sensor_msgs::msg::CompressedImage>(
@@ -83,13 +83,13 @@ bool SimulationBridge::connectToRover(const std::string &agentIP, int agentPort)
         m_executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
         m_executor->add_node(m_node);
         
-        m_rosThread = std::thread([this]() {
+        m_microROSConnected = true;
+	m_rosThread = std::thread([this]() {
             while (rclcpp::ok() && m_microROSConnected) {
                 m_executor->spin_once(std::chrono::milliseconds(10));
             }
         });
 
-        m_microROSConnected = true;
         m_connected = true;
         m_lastHeartbeat = QDateTime::currentMSecsSinceEpoch();
         m_updateTimer->start();
@@ -269,10 +269,13 @@ void SimulationBridge::onTwistMessage(const geometry_msgs::msg::Twist::SharedPtr
     qDebug() << "Received velocity command from rover: linear =" << m_linearVel << "angular =" << m_angularVel;
 }
 
-void SimulationBridge::onBatteryReceived(const sensor_msgs::msg::BatteryState::SharedPtr msg)
+void SimulationBridge::onBatteryReceived(const std_msgs::msg::UInt16::SharedPtr msg)
 {
     m_lastHeartbeat = QDateTime::currentMSecsSinceEpoch();
-    m_batteryLevel = msg->percentage * 100.0;
+
+    // Read battery value published by the Yahboom rover
+    m_batteryLevel = static_cast<double>(msg->data);
+
     emit batteryLevelUpdated(m_batteryLevel);
 }
 

@@ -8,10 +8,10 @@
 
 namespace LunarRoverUI {
 
-GUIManager::GUIManager(QObject *parent)
-    : QObject(parent)
+GUIManager::GUIManager(SimulationBridge *bridge, QObject *parent)
+    : QObject(parent),
+      m_simulationBridge(bridge)
 {
-    m_simulationBridge = new SimulationBridge(this);
 }
 
 QWidget* GUIManager::createUI(QWidget *parent)
@@ -26,6 +26,8 @@ QWidget* GUIManager::createUI(QWidget *parent)
     // setup all UI sections
     m_statusSection = new StatusSection(centralWidget);
     mainLayout->addWidget(m_statusSection);
+    connect(m_simulationBridge, &SimulationBridge::batteryLevelUpdated,
+    m_statusSection, &StatusSection::updateBattery);
 
     m_cameraSection = new CameraSection(centralWidget);
     mainLayout->addWidget(m_cameraSection);
