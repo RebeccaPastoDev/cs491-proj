@@ -3,7 +3,9 @@ using Unity.Mathematics; //Double3FunctionForStoringCoords
 using CesiumForUnity;
 using System.Threading.Tasks;
 using UnityEngine.UIElements;
-using Unity.VisualScripting; //TerrainSamplingFunctions
+using Unity.VisualScripting;
+using System.Collections.Generic;
+using System.Data; //TerrainSamplingFunctions
 
 
 public class LunarTerrainSampler : MonoBehaviour
@@ -30,9 +32,9 @@ double convertLat2LongStep(double latitude, double latDegreesPerMove)
    async void SampleMoonTerrain() //runs once, async allows await function
     {
         
-double latitude = -88.0;
+double latitude = -88.76053;
 
-double longitude = 0.0;
+double longitude = -107.5095;
 
 double3 location = new double3(longitude, latitude, 0.0); //long, lat, height
 
@@ -93,7 +95,107 @@ foreach (LunarNode node in nodes)
 Debug.Log("Traversable edges: " + traversableEdges);
 Debug.Log("Blocked edges: " + blockedEdges);
 
+double minTraversableEdgeCost = double.PositiveInfinity;
+
+foreach(LunarNode node in nodes)
+        {
+            foreach (LunarEdge edge in node.edges)
+            {
+                if(edge.traversable && edge.cost < minTraversableEdgeCost)
+                {
+                    minTraversableEdgeCost = edge.cost;
+                }
+            }
+        }
+
+Debug.Log("Minimum Traversable Edge Cost: " + minTraversableEdgeCost);
+
+LunarPathfinder pathfinder = new LunarPathfinder();
+
+List<LunarNode> path = pathfinder.FindPath(nodes[5100], nodes[7650], minTraversableEdgeCost);
+
+LunarPathVisualizer visualizer = GetComponent<LunarPathVisualizer>();
+
+if (visualizer != null)
+        {
+            
+            visualizer.DrawPath(path);
+        }
+        else
+        {
+            Debug.LogError("LunarPathVisualizer not found!");
+        }
+
+Debug.Log("A* Path Node Count : " + path.Count);
+
+foreach (LunarNode node in path)
+        {
+            Debug.Log("Path Node Row: " + node.row + " | Path Node Col: " + node.col);
+        }
+
+
+double totalPathCost = 0.0;
+
+for (int i = 0; i < path.Count -1 ; i++)
+        {
+            
+            LunarNode current = path[i];
+            LunarNode next = path[i + 1];
+
+            LunarEdge edge = current.edges.Find(e => e.destination == next);
+
+            if (edge == null || !edge.traversable)
+            {
+                
+                Debug.LogError("Invalid path connection!");
+                break;
+
+            }
+
+            totalPathCost += edge.cost;
+
+        }
+        
+        Debug.Log("A* Total Path Cost : " + totalPathCost);
+
+
+        // Existing A* path cost calculation
+for (int i = 0; i < path.Count - 1; i++)
+{
+    // Your existing code
+}
+
+Debug.Log("A* Total Path Cost: " + totalPathCost);
+
+// ADD THE NEW DIJKSTRA TEST HERE
+List<LunarNode> dijkstraPath = pathfinder.FindPath(
+    nodes[5100], nodes[7650], 0.0);
+
+double dijkstraCost = 0.0;
+
+for (int i = 0; i < dijkstraPath.Count - 1; i++)
+{
+    LunarNode current = dijkstraPath[i];
+    LunarNode next = dijkstraPath[i + 1];
+
+    LunarEdge edge = current.edges.Find(e => e.destination == next);
+
+    if (edge == null || !edge.traversable)
+    {
+        Debug.LogError("Invalid Dijkstra path connection!");
+        break;
     }
+
+    dijkstraCost += edge.cost;
+}
+
+Debug.Log("Dijkstra Path Node Count: " + dijkstraPath.Count);
+Debug.Log("Dijkstra Total Path Cost: " + dijkstraCost);
+
+
+    }
+
+
 
 
 async Task<double3> AcquireTerrainData(double3 location) //task = async void
