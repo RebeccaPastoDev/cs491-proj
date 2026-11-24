@@ -8,7 +8,7 @@ This section explains how to set up the software development environment for the
 
 The following tools are used for project development:
 
-- **Unity Hubb:** Used to manage Unity installations and projects.
+- **Unity Hub:** Used to manage Unity installations and projects.
 - **Unity Editor:** Used to develop and run the lunar rover simulation.
 - **Git:** Used for version control and tracking project changes.
 - **GitHub:** Used to share project files and collaborate with team members.

@@ -61,8 +61,7 @@ nav:
           - software/unity-VR/unity-VR.md
       - Path-finding algorithm: 
           - software/path-finding-algorithm/index.md
-      - Rover UI: 
-          - software/rover-UI\index.md
+      - Rover UI: software/rover-UI/index.md
       - Rover & digital twin integration: 
           - software/rover-digital-twin-integration/index.md
   - Contributing guide: contributing.md
