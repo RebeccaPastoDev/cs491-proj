@@ -41,19 +41,19 @@ public class MecanumRoverController : MonoBehaviour
         strafe = 0f;
         turn = 0f;
 
-        // Forward / backward
+        // forward/backward
         if (Input.GetKey(KeyCode.W)) speed += 1f;
         if (Input.GetKey(KeyCode.S)) speed -= 1f;
 
-        // Sideways movement
+        // sideways movement
         if (Input.GetKey(KeyCode.D)) strafe += 1f;
         if (Input.GetKey(KeyCode.A)) strafe -= 1f;
 
-        // Rotation in place
+        // rotation in place
         if (Input.GetKey(KeyCode.E)) turn += 1f;
         if (Input.GetKey(KeyCode.Q)) turn -= 1f;
 
-        // Normalize diagonal movement.
+        // normalize diagonal movement
         Vector2 input = Vector2.ClampMagnitude(
             new Vector2(strafe, speed), 1f
         );
@@ -66,8 +66,7 @@ public class MecanumRoverController : MonoBehaviour
 
     void CalculateWheelSpeeds()
     {
-        // Method 1: Direct mecanum wheel mixing.
-        // Standard X roller configuration.
+        // Method 1: Direct mecanum wheel mixing
 
         frontLeftSpeed = speed + strafe + turn;
         frontRightSpeed = speed - strafe - turn;
@@ -75,7 +74,7 @@ public class MecanumRoverController : MonoBehaviour
         rearLeftSpeed = speed - strafe + turn;
         rearRightSpeed = speed + strafe - turn;
 
-        // Normalize wheel commands.
+        // normalize wheel commands
         float max = Mathf.Max(
             1f,
             Mathf.Abs(frontLeftSpeed),
@@ -109,7 +108,7 @@ public class MecanumRoverController : MonoBehaviour
 
         Vector3 currentVelocity = rb.linearVelocity;
 
-        // Preserve lunar gravity.
+        // preserve lunar gravity
         Vector3 verticalVelocity =
             Vector3.Project(currentVelocity, Vector3.up);
 

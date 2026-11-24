@@ -38735,7 +38735,7 @@ Rigidbody:
   serializedVersion: 5
   m_Mass: 1.897
   m_LinearDamping: 0
-  m_AngularDamping: 10
+  m_AngularDamping: 14
   m_CenterOfMass: {x: 0, y: -0.2, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -41184,7 +41184,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.05942949, y: 0.99496585, z: -0.02490599, w: 0.07675164}
   m_LocalPosition: {x: 0.004022933, y: 0.90774524, z: 0.0065312386}
-  m_LocalScale: {x: 1.0000153, y: 1, z: 1.0000153}
+  m_LocalScale: {x: 1.0000156, y: 1, z: 1.0000156}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 199494393}
@@ -41205,9 +41205,9 @@ MonoBehaviour:
   _detectTransformChanges: 1
   _localToGlobeFixedMatrix:
     c0:
-      x: -0.8898639285888382
-      y: 0.4405167912922018
-      z: 0.11881730842854688
+      x: -0.8898642468241604
+      y: 0.44051694883089787
+      z: 0.11881735092028435
       w: 0
     c1:
       x: -0.09793750815709346
@@ -41215,9 +41215,9 @@ MonoBehaviour:
       z: -0.9927330159385531
       w: 0
     c2:
-      x: 0.4456237766459744
-      y: 0.8950339727843714
-      z: 0.019079969145157638
+      x: 0.4456239360110432
+      y: 0.8950342928686176
+      z: 0.019079975968583025
       w: 0
     c3:
       x: -11313.626716083414
