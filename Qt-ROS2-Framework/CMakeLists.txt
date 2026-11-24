@@ -42,6 +42,8 @@ set(PROJECT_SOURCES
     src/gui_sections/location_section.cpp
     src/gui_sections/overrides_section.h
     src/gui_sections/overrides_section.cpp
+    src/gui_sections/lidar_section.h
+    src/gui_sections/lidar_section.cpp
     resources.qrc
 )
 

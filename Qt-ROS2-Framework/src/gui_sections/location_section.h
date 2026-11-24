@@ -14,8 +14,16 @@ class LocationSection : public QGroupBox
 public:
     explicit LocationSection(QWidget *parent = nullptr);
 
+public slots:
+    void updatePosition(double x, double y, double z);
+    void updateVelocity(double linear, double angular);
+
 private:
     void setupLocationLayout();
+
+    QLabel *m_xCoordLabel;
+    QLabel *m_yCoordLabel;
+    QLabel *m_velocityLabel;
 };
 
 }

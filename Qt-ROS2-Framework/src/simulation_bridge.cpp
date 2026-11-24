@@ -1,5 +1,6 @@
 #include "simulation_bridge.h"
 #include <QDebug>
+#include <QMetaType>
 #include <cmath>
 #include <chrono>
 #include <thread>
@@ -19,6 +20,7 @@ SimulationBridge::SimulationBridge(QObject *parent)
     , m_agentIP("127.0.0.1")
     , m_agentPort(8888)
 {
+    qRegisterMetaType<QVector<float>>("QVector<float>");
     m_updateTimer = new QTimer(this);
     connect(m_updateTimer, &QTimer::timeout, this, &SimulationBridge::simulationUpdateTick);
     m_updateTimer->setInterval(50); // 20 Hz update rate
@@ -44,7 +46,7 @@ bool SimulationBridge::connectToRover(const std::string &agentIP, int agentPort)
 
         // Publisher: Send velocity commands to ESP32 rover
         m_twist_pub = m_node->create_publisher<geometry_msgs::msg::Twist>(
-            "cmd_vel", rclcpp::QoS(10).best_effort()
+            "cmd_vel", rclcpp::QoS(10).reliable()
         );
 
         // Subscriber: Receive odometry from ESP32 (Yahboom uses /odom_raw)
@@ -76,6 +78,27 @@ bool SimulationBridge::connectToRover(const std::string &agentIP, int agentPort)
             "imu", rclcpp::QoS(10).best_effort(),
             [this](const sensor_msgs::msg::Imu::SharedPtr msg) {
                 this->onImuReceived(msg);
+            }
+        );
+
+        // Receive live LiDAR measurements
+        m_scan_sub = m_node->create_subscription<sensor_msgs::msg::LaserScan>(
+            "scan", rclcpp::SensorDataQoS(),
+            [this](const sensor_msgs::msg::LaserScan::SharedPtr msg) {
+                QVector<float> ranges;
+                ranges.reserve(static_cast<int>(msg->ranges.size()));
+
+                for (float distance : msg->ranges) {
+                    ranges.append(distance);
+                }
+
+                emit laserScanReceived(
+                    ranges,
+                    msg->angle_min,
+                    msg->angle_increment,
+                    msg->range_min,
+                    msg->range_max
+                );
             }
         );
 
@@ -258,6 +281,8 @@ void SimulationBridge::onOdometryReceived(const nav_msgs::msg::Odometry::SharedP
     emit positionUpdated(m_posX, m_posY, m_posZ);
     emit orientationUpdated(m_roll, m_pitch, m_yaw);
     emit velocityUpdated(m_linearVel, m_angularVel);
+    emit odometryReceived(m_posX, m_posY, m_posZ, m_linearVel, m_angularVel);
+    emit headingReceived(m_yaw);
 }
 
 void SimulationBridge::onTwistMessage(const geometry_msgs::msg::Twist::SharedPtr msg)
@@ -275,6 +300,7 @@ void SimulationBridge::onBatteryReceived(const std_msgs::msg::UInt16::SharedPtr 
 
     // Read battery value published by the Yahboom rover
     m_batteryLevel = static_cast<double>(msg->data);
+    emit batteryRawReceived(m_batteryLevel);
 
     emit batteryLevelUpdated(m_batteryLevel);
 }
@@ -286,7 +312,10 @@ void SimulationBridge::onImuReceived(const sensor_msgs::msg::Imu::SharedPtr msg)
     // Extract orientation from quaternion
     const auto &q = msg->orientation;
     m_roll = atan2(2.0 * (q.w * q.x + q.y * q.z), 1.0 - 2.0 * (q.x * q.x + q.y * q.y));
-    m_pitch = asin(2.0 * (q.w * q.y - q.z * q.x));
+    m_pitch = asin(std::clamp(
+        2.0 * (q.w * q.y - q.z * q.x), -1.0, 1.0));
+    if (msg->orientation_covariance[0] != -1)
+        emit imuOrientationReceived(m_roll, m_pitch);
     m_yaw = atan2(2.0 * (q.w * q.z + q.x * q.y), 1.0 - 2.0 * (q.y * q.y + q.z * q.z));
 
     emit orientationUpdated(m_roll, m_pitch, m_yaw);
@@ -356,11 +385,20 @@ void SimulationBridge::resetSimulation()
 
 void SimulationBridge::simulationUpdateTick()
 {
-    // Check communication timeout
-    if (getLastHeartbeat() > 3000) {
-        qDebug() << "⚠️ Communication timeout with rover - no heartbeat for 3 seconds";
+    // Report communication state transitions only
+    static bool timedOut = false;
+    const bool timeoutNow = getLastHeartbeat() > 3000;
+
+    if (timeoutNow && !timedOut) {
+        qWarning() << "Communication timeout with rover";
         emit connectionStatusChanged(false);
     }
+    else if (!timeoutNow && timedOut) {
+        qDebug() << "Rover communication restored";
+        emit connectionStatusChanged(true);
+    }
+
+    timedOut = timeoutNow;
 
     // Update simulation time
     m_simTime += 0.05;

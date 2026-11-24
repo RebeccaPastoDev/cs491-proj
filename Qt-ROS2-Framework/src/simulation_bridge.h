@@ -2,6 +2,7 @@
 #define SIMULATION_BRIDGE_H
 
 #include <QObject>
+#include <QVector>
 #include <QTimer>
 #include <QDateTime>
 #include <string>
@@ -15,6 +16,7 @@
 #include <sensor_msgs/msg/battery_state.hpp>
 #include <sensor_msgs/msg/compressed_image.hpp>
 #include <sensor_msgs/msg/imu.hpp>
+#include <sensor_msgs/msg/laser_scan.hpp>
 #endif
 
 namespace LunarRoverUI {
@@ -49,8 +51,19 @@ public slots:
     void resetSimulation();
 
 signals:
+    void headingReceived(double yaw);
+    void imuOrientationReceived(double roll, double pitch);
+    void batteryRawReceived(double raw);
+
+    void laserScanReceived(QVector<float> ranges,
+                           float angleMin,
+                           float angleIncrement,
+                           float rangeMin,
+                           float rangeMax);
+
     void connectionStatusChanged(bool connected);
     void positionUpdated(double x, double y, double z);
+    void odometryReceived(double x, double y, double z, double linear, double angular);
     void orientationUpdated(double roll, double pitch, double yaw);
     void velocityUpdated(double linear, double angular);
     void batteryLevelUpdated(double percentage);
@@ -82,6 +95,7 @@ private:
     rclcpp::Subscription<std_msgs::msg::UInt16>::SharedPtr m_battery_sub;
     rclcpp::Subscription<sensor_msgs::msg::CompressedImage>::SharedPtr m_camera_sub;
     rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr m_imu_sub;
+    rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr m_scan_sub;
     
     // Generic micro-ROS publishers/subscribers
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_twist_sub;

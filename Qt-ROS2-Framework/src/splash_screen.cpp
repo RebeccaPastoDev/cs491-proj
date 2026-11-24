@@ -1,7 +1,5 @@
 #include "splash_screen.h"
-#include <QApplication>
-#include <QFontDatabase>
-#include <QStyleFactory>
+#include <QFrame>
 
 namespace LunarRoverUI {
 
@@ -13,107 +11,141 @@ SplashScreen::SplashScreen(QWidget *parent)
 
 void SplashScreen::setupUI()
 {
-    // set window properties
-    setWindowTitle(tr("Lunar Rover UI - Select Rover"));
-    resize(800, 600);
+    auto *layout = new QVBoxLayout(this);
+    layout->setContentsMargins(36, 32, 36, 24);
+    layout->setSpacing(20);
 
-    // main layout
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->setMargin(20);
-    mainLayout->setSpacing(20);
+    auto *tag = new QLabel("MISSION CONTROL SYSTEM");
+    tag->setStyleSheet(
+        "color: #60a5fa; font-weight: bold;"
+        "letter-spacing: 2px;");
 
-    // logo section
-    m_logoLabel = new QLabel(this);
-    m_logoLabel->setText(tr("Lunar Rover UI"));
-    QFont logoFont = QFontDatabase::systemFont(QFontDatabase::GeneralFont);
-    logoFont.setPointSize(24);
-    logoFont.setBold(true);
-    m_logoLabel->setFont(logoFont);
-    m_logoLabel->setAlignment(Qt::AlignCenter);
-    mainLayout->addWidget(m_logoLabel);
+    layout->addWidget(tag);
 
-    // create rover and info sections
+    m_logoLabel = new QLabel("LUNAR ROVER");
+    m_logoLabel->setObjectName("pageTitle");
+    m_logoLabel->setStyleSheet("font-size: 32pt;");
+    layout->addWidget(m_logoLabel);
+
+
+    layout->addSpacing(12);
+
     setupRoverSection();
     setupInfoPanel();
 
-    // add sections to main layout
-    mainLayout->addWidget(m_roverGroup);
-    mainLayout->addWidget(m_infoGroup);
+    layout->addWidget(m_roverGroup);
+    layout->addWidget(m_infoGroup);
+    layout->addStretch();
 
-    // set layout
-    setLayout(mainLayout);
 }
 
 void SplashScreen::setupRoverSection()
 {
-    m_roverGroup = new QGroupBox(tr("Select Rover"), this);
-    QGridLayout *roverLayout = new QGridLayout(m_roverGroup);
+    m_roverGroup = new QGroupBox("SELECT ROVER");
+    auto *row = new QHBoxLayout(m_roverGroup);
+    row->setSpacing(16);
 
-// Rover 1
-m_rover1Button = new QPushButton(tr("Rover 1"), this);
-m_rover1Button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    // Rover 01
+    auto *rover1 = new QFrame;
+    rover1->setObjectName("card");
 
-m_rover1Status = new QLabel(tr("Connected"), this);
-m_rover1Status->setObjectName("rover1Status");
-m_rover1Objective = new QLabel(tr("Exploring Crater Region"), this);
+    auto *first = new QVBoxLayout(rover1);
+    first->setContentsMargins(20, 20, 20, 20);
+    first->setSpacing(12);
 
-// Rover 2
-m_rover2Button = new QPushButton(tr("Rover 2"), this);
-m_rover2Button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-m_rover2Button->setEnabled(false);
+    m_rover1Status = new QLabel("CONFIGURED");
+    m_rover1Status->setObjectName("successLabel");
+    first->addWidget(m_rover1Status);
 
-m_rover2Status = new QLabel(tr("Not Connected"), this);
-m_rover2Status->setObjectName("rover2Status");
-m_rover2Objective = new QLabel(tr("Standby"), this);
+    auto *title1 = new QLabel("ROVER 01");
+    title1->setObjectName("pageTitle");
+    first->addWidget(title1);
 
-// add widgets to layout
-roverLayout->addWidget(m_rover1Button, 0, 0);
-roverLayout->addWidget(m_rover1Status, 1, 0);
-roverLayout->addWidget(m_rover1Objective, 2, 0);
-roverLayout->addWidget(m_rover2Button, 0, 1);
-roverLayout->addWidget(m_rover2Status, 1, 1);
-roverLayout->addWidget(m_rover2Objective, 2, 1);
+    m_rover1Objective = new QLabel(
+        "Yahboom ESP32-S3\nPhysical rover");
+    m_rover1Objective->setObjectName("mutedLabel");
+    first->addWidget(m_rover1Objective);
 
-// connect signals
-connect(m_rover1Button, &QPushButton::clicked, this, [this]() {
-    emit roverSelected(1);
-});
+    first->addStretch();
+
+    m_rover1Button = new QPushButton("Open Dashboard");
+    m_rover1Button->setObjectName("primaryButton");
+    m_rover1Button->setMinimumHeight(44);
+    first->addWidget(m_rover1Button);
+
+    // Rover 02
+    auto *rover2 = new QFrame;
+    rover2->setObjectName("card");
+
+    auto *second = new QVBoxLayout(rover2);
+    second->setContentsMargins(20, 20, 20, 20);
+    second->setSpacing(12);
+
+    m_rover2Status = new QLabel("NOT CONFIGURED");
+    m_rover2Status->setObjectName("mutedLabel");
+    second->addWidget(m_rover2Status);
+
+    auto *title2 = new QLabel("ROVER 02");
+    title2->setObjectName("pageTitle");
+    title2->setStyleSheet("color: #64748b;");
+    second->addWidget(title2);
+
+    m_rover2Objective = new QLabel(
+        "Future expansion\nNo rover assigned");
+    m_rover2Objective->setObjectName("mutedLabel");
+    second->addWidget(m_rover2Objective);
+
+    second->addStretch();
+
+    m_rover2Button = new QPushButton("Unavailable");
+    m_rover2Button->setMinimumHeight(44);
+    m_rover2Button->setEnabled(false);
+    second->addWidget(m_rover2Button);
+
+    row->addWidget(rover1, 1);
+    row->addWidget(rover2, 1);
+
+    connect(m_rover1Button, &QPushButton::clicked,
+            this, [this]() {
+        emit roverSelected(1);
+    });
 }
 
 void SplashScreen::setupInfoPanel()
 {
-    m_infoGroup = new QGroupBox(tr("System Information"), this);
-    QGridLayout *infoLayout = new QGridLayout(m_infoGroup);
+    m_infoGroup = new QGroupBox("SYSTEM CONFIGURATION");
 
-    // connection status
-    QLabel *connectionLabel = new QLabel(tr("Connection Status:"), this);
-    m_connectionStatus = new QLabel(tr("Connected"), this);
-    m_connectionStatus->setObjectName("connectionStatus");
+    auto *grid = new QGridLayout(m_infoGroup);
+    grid->setHorizontalSpacing(28);
+    grid->setVerticalSpacing(14);
 
-    // battery level
-    QLabel *batteryLabel = new QLabel(tr("Battery Level:"), this);
-    m_batteryLevel = new QLabel(tr("95%"), this);
+    auto addRow = [grid](int row,
+                        const QString &name,
+                        const QString &value) {
+        auto *key = new QLabel(name);
+        key->setObjectName("mutedLabel");
 
-    // signal strength
-    QLabel *signalLabel = new QLabel(tr("Signal Strength:"), this);
-    m_signalStrength = new QLabel(tr("Excellent"), this);
+        auto *val = new QLabel(value);
 
-    // last update
-    QLabel *updateLabel = new QLabel(tr("Last Update:"), this);
-    m_lastUpdate = new QLabel(tr("Just now"), this);
+        grid->addWidget(key, row, 0);
+        grid->addWidget(val, row, 1);
+    };
 
-    // add widgets to layout
-    infoLayout->addWidget(connectionLabel, 0, 0);
-    infoLayout->addWidget(m_connectionStatus, 0, 1);
-    infoLayout->addWidget(batteryLabel, 1, 0);
-    infoLayout->addWidget(m_batteryLevel, 1, 1);
-    infoLayout->addWidget(signalLabel, 2, 0);
-    infoLayout->addWidget(m_signalStrength, 2, 1);
-    infoLayout->addWidget(updateLabel, 3, 0);
-    infoLayout->addWidget(m_lastUpdate, 3, 1);
+    addRow(0, "ROS distribution", "ROS 2 Humble");
+    addRow(1, "Transport", "micro-ROS Wi-Fi UDP");
+    addRow(2, "ROS domain", "20");
+    addRow(3, "Agent endpoint", "172.20.10.2:8090");
+    addRow(4, "Unity integration", "Pending");
+    addRow(5, "Motion control", "Safety locked");
 
-    // set layout
-    m_infoGroup->setLayout(infoLayout);
+    grid->setColumnStretch(1, 1);
+
+    auto *note = new QLabel(
+        "Live sensor status is available in the dashboard.");
+    note->setObjectName("mutedLabel");
+    note->setWordWrap(true);
+
+    grid->addWidget(note, 6, 0, 1, 2);
 }
 
 }

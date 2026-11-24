@@ -6,8 +6,9 @@ namespace LunarRoverUI {
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    setWindowTitle(tr("Lunar Rover UI"));
-    resize(800, 700);
+    setWindowTitle(tr("Lunar Rover | Mission Control"));
+    resize(1100, 900);
+    setMinimumSize(760, 600);
 
     m_simulationBridge = new SimulationBridge(this);
     m_guiManager = new GUIManager(m_simulationBridge, this);
@@ -49,6 +50,12 @@ void MainWindow::showSplashScreen()
 
 void MainWindow::showMainUI()
 {
+    // Reuse the existing dashboard and ROS signal connections.
+    if (m_stackedWidget->count() > 1) {
+        m_stackedWidget->setCurrentIndex(1);
+        return;
+    }
+
     QWidget *uiWidget = m_guiManager->createUI(this);
     m_stackedWidget->addWidget(uiWidget);
     m_stackedWidget->setCurrentWidget(uiWidget);
