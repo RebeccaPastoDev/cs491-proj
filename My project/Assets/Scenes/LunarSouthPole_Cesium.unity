@@ -35679,6 +35679,59 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.272136, y: 1.0038302, z: 1.8303347}
   m_Center: {x: 0.11160365, y: 0.42825687, z: -0.035714813}
+--- !u!1 &1558779306
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1558779308}
+  - component: {fileID: 1558779307}
+  m_Layer: 0
+  m_Name: UnityBridgeIntegration
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1558779307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558779306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b1ce509a31146c419b392f9fa5a9349, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnityBridgeClient
+  serverUrl: ws://127.0.0.1:8765
+  connectOnStart: 1
+  isConnected: 0
+  connectionStatus: Disconnected
+  telemetrySource: 
+  isLive: 0
+  physicalExecutionEnabled: 0
+  batteryVoltage: 0
+  logTelemetry: 1
+--- !u!4 &1558779308
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558779306}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 502.94128, y: -21.79, z: -2035.9397}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1560904803
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -146130,6 +146183,7 @@ SceneRoots:
   - {fileID: 384523137}
   - {fileID: 794353236}
   - {fileID: 1968971714}
-  - {fileID: 501156041}
   - {fileID: 1686150544}
   - {fileID: 85450083}
+  - {fileID: 1558779308}
+  - {fileID: 501156041}
