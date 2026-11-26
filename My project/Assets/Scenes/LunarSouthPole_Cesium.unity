@@ -10131,14 +10131,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ROSHUD
   rosReceiver: {fileID: 501156040}
+  bridgeClient: {fileID: 1558779307}
+  useBridgeMode: 1
   rover: {fileID: 1686150544}
   roverRigidbody: {fileID: 1686150546}
   positionText: {fileID: 1246909299}
   speedText: {fileID: 1040247432}
   headingText: {fileID: 193010063}
+  batteryText: {fileID: 1771616441}
   vrPositionText: {fileID: 345097206}
   vrSpeedText: {fileID: 4690799}
   vrHeadingText: {fileID: 2055711926}
+  vrBatteryText: {fileID: 203036721}
   useROSWhenAvailable: 1
 --- !u!114 &501156040
 MonoBehaviour:
@@ -35338,6 +35342,18 @@ MonoBehaviour:
   isLive: 0
   physicalExecutionEnabled: 0
   batteryVoltage: 0
+  telemetryTimeout: 3
+  bridgePosition: {x: 0, y: 0, z: 0}
+  bridgeSpeed: 0
+  bridgeHeading: 0
+  bridgeAngularSpeed: 0
+  hasOdometry: 0
+  hasBattery: 0
+  hasLidar: 0
+  lidarSampleCount: 0
+  lidarValidCount: 0
+  lidarClosestDistance: 0
+  lidarClosestAngle: 0
   logTelemetry: 1
 --- !u!4 &1558779308
 Transform:
@@ -38872,6 +38888,9 @@ MonoBehaviour:
     m_Bits: 24
   cautionDistance: 10
   warningDistance: 5
+  telemetryHUD: {fileID: 501156039}
+  bridgeCautionDistance: 0.5
+  bridgeWarningDistance: 0.25
   obstacleValue: {fileID: 1024521366}
   vrObstacleValue: {fileID: 1251672121}
 --- !u!114 &1686150551
@@ -41237,7 +41256,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.05942949, y: 0.99496585, z: -0.02490599, w: 0.07675164}
   m_LocalPosition: {x: 0.004022933, y: 0.90774524, z: 0.0065312386}
-  m_LocalScale: {x: 1.0000178, y: 1, z: 1.0000178}
+  m_LocalScale: {x: 1.0000188, y: 1, z: 1.0000188}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 199494393}
@@ -41258,9 +41277,9 @@ MonoBehaviour:
   _detectTransformChanges: 1
   _localToGlobeFixedMatrix:
     c0:
-      x: -0.8898661562360939
-      y: 0.4405178940630745
-      z: 0.11881760587070914
+      x: -0.8898671109420605
+      y: 0.44051836667916283
+      z: 0.11881773334592154
       w: 0
     c1:
       x: -0.09793750815709346
@@ -41268,9 +41287,9 @@ MonoBehaviour:
       z: -0.9927330159385531
       w: 0
     c2:
-      x: 0.4456248922014556
-      y: 0.8950362133740941
-      z: 0.0190800169091354
+      x: 0.44562537029666194
+      y: 0.8950371736268325
+      z: 0.019080037379411587
       w: 0
     c3:
       x: -11313.626716083414

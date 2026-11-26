@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -83,7 +82,12 @@ public class RoverWarningManager : MonoBehaviour
             }
         }
 
-        // Check simulated LiDAR.
+        // Bridge warnings are informational only; no movement commands.
+        bool bridgeMode = obstacleMonitor != null && obstacleMonitor.BridgeMode;
+        if (bridgeMode && !obstacleMonitor.BridgeScanAvailable)
+            warnings.Add(new Warning("Bridge LiDAR unavailable", 1));
+
+        // Check selected LiDAR source.
         if (obstacleMonitor != null &&
             obstacleMonitor.HasObstacle)
         {
@@ -93,15 +97,18 @@ public class RoverWarningManager : MonoBehaviour
             string direction =
                 obstacleMonitor.ClosestObstacleDirection;
 
-            if (distance <= warningDistance)
+            float critical = bridgeMode ? obstacleMonitor.ActiveWarningDistance : warningDistance;
+            float caution = bridgeMode ? obstacleMonitor.ActiveCautionDistance : cautionDistance;
+            string source = bridgeMode ? (obstacleMonitor.telemetryHUD.bridgeClient.isLive ? "Live" : "Recorded") : "";
+            if (distance <= critical)
             {
                 warnings.Add(new Warning(
-                    $"Obstacle {direction}: {distance:F1} m", 2));
+                    bridgeMode ? $"{source} obstacle: {distance:F2} m" : $"Obstacle {direction}: {distance:F1} m", 2));
             }
-            else if (distance <= cautionDistance)
+            else if (distance <= caution)
             {
                 warnings.Add(new Warning(
-                    $"Obstacle nearby {direction}: {distance:F1} m", 1));
+                    bridgeMode ? $"{source} caution: {distance:F2} m" : $"Obstacle nearby {direction}: {distance:F1} m", 1));
             }
         }
 

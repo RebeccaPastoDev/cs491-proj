@@ -22,6 +22,24 @@ public class UnityBridgeClient : MonoBehaviour
     public bool physicalExecutionEnabled;
     public float batteryVoltage;
 
+    public float telemetryTimeout = 3f;
+    public Vector3 bridgePosition;
+    public float bridgeSpeed;
+    public float bridgeHeading;
+    public float bridgeAngularSpeed;
+    public bool hasOdometry;
+    public bool hasBattery;
+    private float lastTelemetryTime = -1f;
+    public bool TelemetryActive => isConnected && lastTelemetryTime >= 0f &&
+        Time.realtimeSinceStartup - lastTelemetryTime <= telemetryTimeout;
+
+    [Header("Bridge LiDAR")]
+    public bool hasLidar;
+    public int lidarSampleCount;
+    public int lidarValidCount;
+    public float lidarClosestDistance;
+    public float lidarClosestAngle;
+
     [Header("Debug Settings")]
     public bool logTelemetry = true;
 
@@ -42,12 +60,57 @@ public class UnityBridgeClient : MonoBehaviour
         public bool is_live;
         public bool physical_execution_enabled;
         public BatteryData battery;
+        public OdometryData odometry;
+        public LidarData lidar;
     }
 
     [Serializable]
     public class BatteryData
     {
         public float voltage_v;
+    }
+
+    [Serializable]
+    public class OdometryData
+    {
+        public Vector3 position_m;
+        public Vector3 linear_velocity_m_s;
+        public Vector3 angular_velocity_rad_s;
+        public Quaternion orientation;
+    }
+
+    [Serializable]
+    public class LidarData
+    {
+        public float angle_min_rad;
+        public float angle_increment_rad;
+        public float range_min_m;
+        public float range_max_m;
+        public float[] ranges_m;
+    }
+
+    private void ParseLidar(LidarData scan)
+    {
+        hasLidar = false;
+        lidarSampleCount = scan?.ranges_m?.Length ?? 0;
+        lidarValidCount = 0;
+        lidarClosestDistance = float.PositiveInfinity;
+        lidarClosestAngle = 0f;
+        if (lidarSampleCount == 0 || scan.range_min_m <= 0f ||
+            scan.range_max_m <= scan.range_min_m) return;
+        for (int i = 0; i < lidarSampleCount; i++)
+        {
+            float r = scan.ranges_m[i];
+            if (float.IsNaN(r) || float.IsInfinity(r) ||
+                r < scan.range_min_m || r > scan.range_max_m) continue;
+            lidarValidCount++;
+            if (r < lidarClosestDistance)
+            {
+                lidarClosestDistance = r;
+                lidarClosestAngle = (scan.angle_min_rad + i * scan.angle_increment_rad) * Mathf.Rad2Deg;
+            }
+        }
+        hasLidar = lidarValidCount > 0;
     }
 
     async void Start()
@@ -70,6 +133,10 @@ public class UnityBridgeClient : MonoBehaviour
         socket = client;
         cancellation = tokenSource;
         receivedFirstTelemetry = false;
+        lastTelemetryTime = -1f;
+        hasOdometry = false;
+        hasBattery = false;
+        ParseLidar(null);
 
         try
         {
@@ -185,6 +252,22 @@ public class UnityBridgeClient : MonoBehaviour
 
                 physicalExecutionEnabled =
                     message.physical_execution_enabled;
+
+                lastTelemetryTime = Time.realtimeSinceStartup;
+                ParseLidar(message.lidar);
+                hasBattery = message.battery != null;
+                hasOdometry = message.odometry != null;
+                if (hasOdometry)
+                {
+                    var odom = message.odometry;
+                    bridgePosition = odom.position_m;
+                    bridgeSpeed = odom.linear_velocity_m_s.magnitude;
+                    bridgeAngularSpeed = odom.angular_velocity_rad_s.magnitude;
+                    Quaternion q = odom.orientation;
+                    float sinYaw = 2f * (q.w * q.z + q.x * q.y);
+                    float cosYaw = 1f - 2f * (q.y * q.y + q.z * q.z);
+                    bridgeHeading = Mathf.Repeat(Mathf.Atan2(sinYaw, cosYaw) * Mathf.Rad2Deg, 360f);
+                }
 
                 if (message.battery != null)
                 {

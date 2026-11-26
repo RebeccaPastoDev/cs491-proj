@@ -1,0 +1,13 @@
+{
+    "type": "mission_start",
+    "schema_version": "1.0",
+    "mission_id": "fetch_water_001",
+    "mission_name": "fetch_water",
+    "coordinate_frame": "unity_world",
+    "waypoints": [
+        {"x": 0.0, "z": 0.0},
+        {"x": 0.0, "z": 10.0},
+        {"x": 10.0, "z": 10.0},
+        {"x": 10.0, "z": 30.0}
+    ]
+}

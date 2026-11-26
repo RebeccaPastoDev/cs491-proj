@@ -18,6 +18,15 @@ public class RoverObstacleMonitor : MonoBehaviour
     public float cautionDistance = 10f;
     public float warningDistance = 5f;
 
+    [Header("Bridge LiDAR")]
+    public ROSHUD telemetryHUD;
+    public float bridgeCautionDistance = 0.5f;
+    public float bridgeWarningDistance = 0.25f;
+    public bool BridgeMode => telemetryHUD != null && telemetryHUD.useBridgeMode;
+    public bool BridgeScanAvailable { get; private set; }
+    public float ActiveCautionDistance => BridgeMode ? bridgeCautionDistance : cautionDistance;
+    public float ActiveWarningDistance => BridgeMode ? bridgeWarningDistance : warningDistance;
+
     [Header("Desktop HUD")]
     public TMP_Text obstacleValue;
 
@@ -39,6 +48,12 @@ public class RoverObstacleMonitor : MonoBehaviour
 
     void Update()
     {
+        BridgeScanAvailable = false;
+        if (BridgeMode)
+        {
+            UpdateBridgeObstacle();
+            return;
+        }
         if (rover == null || lidarSensor == null)
         {
             HasObstacle = false;
@@ -154,6 +169,26 @@ public class RoverObstacleMonitor : MonoBehaviour
             $"{closestDirection}: {closestDistance:F1} m",
             displayColor
         );
+    }
+
+    void UpdateBridgeObstacle()
+    {
+        var bridge = telemetryHUD.bridgeClient;
+        BridgeScanAvailable = bridge != null && bridge.TelemetryActive && bridge.hasLidar;
+        HasObstacle = BridgeScanAvailable;
+        ClosestObstacleDistance = BridgeScanAvailable ? bridge.lidarClosestDistance : Mathf.Infinity;
+        ClosestObstacleDirection = "";
+        if (!BridgeScanAvailable)
+        {
+            UpdateObstacleDisplay("LiDAR unavailable", Color.gray);
+            return;
+        }
+        float d = ClosestObstacleDistance;
+        Color color = d <= bridgeWarningDistance ? new Color32(255, 100, 100, 255) :
+            d <= bridgeCautionDistance ? new Color32(255, 200, 80, 255) :
+            new Color32(119, 201, 154, 255);
+        string source = bridge.isLive ? "Live" : "Recorded";
+        UpdateObstacleDisplay($"{d:F2} m ({source})", color);
     }
 
     void UpdateObstacleDisplay(string value, Color color)
