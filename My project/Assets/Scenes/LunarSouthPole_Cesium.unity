@@ -35301,59 +35301,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.272136, y: 1.0038302, z: 1.8303347}
   m_Center: {x: 0.11160365, y: 0.42825687, z: -0.035714813}
---- !u!1 &1558779306
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1558779308}
-  - component: {fileID: 1558779307}
-  m_Layer: 0
-  m_Name: UnityBridgeIntegration
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1558779307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1558779306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b1ce509a31146c419b392f9fa5a9349, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UnityBridgeClient
-  serverUrl: ws://127.0.0.1:8765
-  connectOnStart: 1
-  isConnected: 0
-  connectionStatus: Disconnected
-  telemetrySource: 
-  isLive: 0
-  physicalExecutionEnabled: 0
-  batteryVoltage: 0
-  logTelemetry: 1
---- !u!4 &1558779308
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1558779306}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 502.94128, y: -21.79, z: -2035.9397}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1560904803
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41237,7 +41184,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.05942949, y: 0.99496585, z: -0.02490599, w: 0.07675164}
   m_LocalPosition: {x: 0.004022933, y: 0.90774524, z: 0.0065312386}
-  m_LocalScale: {x: 1.0000175, y: 1, z: 1.0000175}
+  m_LocalScale: {x: 1.0000156, y: 1, z: 1.0000156}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 199494393}
@@ -41258,9 +41205,9 @@ MonoBehaviour:
   _detectTransformChanges: 1
   _localToGlobeFixedMatrix:
     c0:
-      x: -0.8898659440792124
-      y: 0.4405177890372772
-      z: 0.11881757754288416
+      x: -0.8898642468241604
+      y: 0.44051694883089787
+      z: 0.11881735092028435
       w: 0
     c1:
       x: -0.09793750815709346
@@ -41268,9 +41215,9 @@ MonoBehaviour:
       z: -0.9927330159385531
       w: 0
     c2:
-      x: 0.4456247859580765
-      y: 0.8950359999845967
-      z: 0.019080012360185142
+      x: 0.4456239360110432
+      y: 0.8950342928686176
+      z: 0.019079975968583025
       w: 0
     c3:
       x: -11313.626716083414
@@ -145805,7 +145752,6 @@ SceneRoots:
   - {fileID: 384523137}
   - {fileID: 794353236}
   - {fileID: 1968971714}
+  - {fileID: 501156041}
   - {fileID: 1686150544}
   - {fileID: 85450083}
-  - {fileID: 1558779308}
-  - {fileID: 501156041}
