@@ -2670,7 +2670,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -8}
+  m_AnchoredPosition: {x: 12, y: -19.4}
   m_SizeDelta: {x: 325, y: 24}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &124232643
@@ -3270,8 +3270,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 16, y: -423}
-  m_SizeDelta: {x: 388, y: 4}
+  m_AnchoredPosition: {x: 16, y: -431.6}
+  m_SizeDelta: {x: 388, y: 2}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &149119324
 MonoBehaviour:
@@ -8193,8 +8193,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 12, y: -314}
-  m_SizeDelta: {x: 392, y: 4}
+  m_AnchoredPosition: {x: 14, y: -310.6}
+  m_SizeDelta: {x: 392, y: 2}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &387916618
 MonoBehaviour:
@@ -22967,7 +22967,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 158.71165, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -38777,6 +38777,7 @@ GameObject:
   - component: {fileID: 1686150550}
   - component: {fileID: 1686150551}
   - component: {fileID: 1686150552}
+  - component: {fileID: 1686150553}
   m_Layer: 0
   m_Name: FlexiRover_Controller
   m_TagString: Untagged
@@ -38949,6 +38950,27 @@ MonoBehaviour:
   groundClearance: 0.5
   checkInterval: 0.2
   showDebugLogs: 1
+--- !u!114 &1686150553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1686150543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8016c76a7e224494e89ebaea361d6d6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoverTelemetryMotion
+  movementMode: 1
+  bridgeClient: {fileID: 1558779307}
+  manualController: {fileID: 1686150548}
+  metersPerUnityUnit: 0.03048
+  positionGain: 5
+  maxTrackingSpeed: 30
+  maxRecordedStepMeters: 0.25
+  maxTurnSpeed: 180
+  playbackStatus: 
 --- !u!1001 &1689215471
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41268,7 +41290,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.05942949, y: 0.99496585, z: -0.02490599, w: 0.07675164}
   m_LocalPosition: {x: 0.004022933, y: 0.90774524, z: 0.0065312386}
-  m_LocalScale: {x: 1.0000217, y: 1, z: 1.0000217}
+  m_LocalScale: {x: 1.0000228, y: 1, z: 1.0000228}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 199494393}
@@ -41289,9 +41311,9 @@ MonoBehaviour:
   _detectTransformChanges: 1
   _localToGlobeFixedMatrix:
     c0:
-      x: -0.8898696568246383
-      y: 0.4405196269887317
-      z: 0.11881807327982125
+      x: -0.8898706115306049
+      y: 0.44052009960482
+      z: 0.11881820075503365
       w: 0
     c1:
       x: -0.09793750815709346
@@ -41299,9 +41321,9 @@ MonoBehaviour:
       z: -0.9927330159385531
       w: 0
     c2:
-      x: 0.44562664521721185
-      y: 0.8950397343008015
-      z: 0.019080091966814754
+      x: 0.44562712331241805
+      y: 0.8950406945535399
+      z: 0.019080112437090943
       w: 0
     c3:
       x: -11313.626716083414
@@ -41476,7 +41498,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 16, y: -326}
+  m_AnchoredPosition: {x: 16, y: -338.2}
   m_SizeDelta: {x: 188, y: 90}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1824022744
@@ -44193,7 +44215,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 215.99997, y: -325.99994}
+  m_AnchoredPosition: {x: 214, y: -338.20004}
   m_SizeDelta: {x: 188, y: 90}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1931670442
