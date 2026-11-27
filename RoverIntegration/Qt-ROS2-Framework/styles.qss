@@ -1,0 +1,166 @@
+
+/* Lunar Rover Mission Control - Shared Theme */
+
+QWidget {
+    background-color: #0b1220;
+    color: #e2e8f0;
+    font-family: "DejaVu Sans";
+    font-size: 10pt;
+}
+
+QLabel {
+    background-color: transparent;
+    color: #e2e8f0;
+}
+
+QLabel#pageTitle {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #e2e8f0;
+}
+
+QLabel#subtitle {
+    color: #94a3b8;
+    font-size: 10pt;
+}
+
+QLabel#metricValue {
+    font-size: 25pt;
+    font-weight: bold;
+    color: #e2e8f0;
+}
+
+QLabel#metricTitle {
+    color: #94a3b8;
+    font-size: 10pt;
+    font-weight: bold;
+}
+
+QLabel#sectionTitle {
+    color: #e2e8f0;
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+QLabel#mutedLabel {
+    color: #94a3b8;
+}
+
+QLabel#successLabel {
+    color: #34d399;
+    font-weight: bold;
+}
+
+QLabel#warningLabel {
+    color: #fbbf24;
+    font-weight: bold;
+}
+
+QFrame#card,
+QFrame#statusFrame,
+QFrame#overridesFrame {
+    background-color: #162235;
+    border: 1px solid #26364c;
+    border-radius: 10px;
+}
+
+QGroupBox {
+    background-color: #162235;
+    border: 1px solid #26364c;
+    border-radius: 10px;
+    margin-top: 16px;
+    padding: 14px;
+    font-weight: bold;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 14px;
+    padding: 0 6px;
+    color: #94a3b8;
+}
+
+QPushButton {
+    background-color: #162235;
+    border: 1px solid #26364c;
+    border-radius: 7px;
+    padding: 10px 18px;
+    color: #e2e8f0;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #26364c;
+    border-color: #60a5fa;
+}
+
+QPushButton:pressed {
+    background-color: #334155;
+}
+
+QPushButton:disabled {
+    background-color: #101b2b;
+    color: #64748b;
+    border-color: #26364c;
+}
+
+QPushButton#primaryButton {
+    background-color: #2563eb;
+    border-color: #3b82f6;
+    color: #ffffff;
+}
+
+QPushButton#primaryButton:hover {
+    background-color: #3b82f6;
+}
+
+QPushButton#stopButton {
+    background-color: #7f1d1d;
+    border-color: #ef4444;
+    color: #ffffff;
+}
+
+QPushButton#stopButton:disabled {
+    background-color: #291b25;
+    border-color: #59303b;
+    color: #a78b92;
+}
+
+QPushButton:checked {
+    background-color: #1e3a5f;
+    border-color: #60a5fa;
+    color: #93c5fd;
+}
+
+QScrollArea {
+    border: none;
+}
+
+QScrollBar:vertical {
+    background-color: #0b1220;
+    width: 9px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #334155;
+    border-radius: 4px;
+    min-height: 25px;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QSlider::groove:horizontal {
+    height: 6px;
+    background-color: #26364c;
+    border-radius: 3px;
+}
+
+QSlider::handle:horizontal {
+    background-color: #60a5fa;
+    width: 16px;
+    margin: -5px 0;
+    border-radius: 8px;
+}
