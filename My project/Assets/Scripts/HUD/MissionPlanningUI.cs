@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -23,6 +22,16 @@ public class MissionPlanningUI : MonoBehaviour
 
     [Header("Navigation")]
     public SwitchHUDPage pageSwitcher;
+
+    [Header("VR Task Toggles")]
+    public Toggle vrFindWaterToggle;
+    public Toggle vrCollectWaterToggle;
+    public Toggle vrDepositWaterToggle;
+    public Toggle vrReturnToBaseToggle;
+
+    [Header("VR Planning UI")]
+    public TMP_Text vrAssignedTasksText;
+    public Button vrAssignMissionButton;
 
     [Header("Unity Bridge")]
     public UnityBridgeClient bridgeClient;
@@ -81,19 +90,14 @@ public class MissionPlanningUI : MonoBehaviour
 
     void Start()
     {
-        findWaterToggle.onValueChanged.AddListener(
-            value => UpdateAssignedTasks());
-
-        collectWaterToggle.onValueChanged.AddListener(
-            value => UpdateAssignedTasks());
-
-        depositWaterToggle.onValueChanged.AddListener(
-            value => UpdateAssignedTasks());
-
-        returnToBaseToggle.onValueChanged.AddListener(
-            value => UpdateAssignedTasks());
+        BindTogglePair(findWaterToggle, vrFindWaterToggle);
+        BindTogglePair(collectWaterToggle, vrCollectWaterToggle);
+        BindTogglePair(depositWaterToggle, vrDepositWaterToggle);
+        BindTogglePair(returnToBaseToggle, vrReturnToBaseToggle);
 
         assignMissionButton.onClick.AddListener(AssignMission);
+        if (vrAssignMissionButton != null)
+            vrAssignMissionButton.onClick.AddListener(AssignMission);
 
         if (bridgeClient != null)
         {
@@ -102,6 +106,28 @@ public class MissionPlanningUI : MonoBehaviour
         }
 
         UpdateAssignedTasks();
+    }
+
+    private void BindTogglePair(Toggle desktop, Toggle vr)
+    {
+        if (vr != null)
+            vr.SetIsOnWithoutNotify(desktop.isOn);
+
+        desktop.onValueChanged.AddListener(value =>
+        {
+            if (vr != null)
+                vr.SetIsOnWithoutNotify(value);
+            UpdateAssignedTasks();
+        });
+
+        if (vr != null)
+        {
+            vr.onValueChanged.AddListener(value =>
+            {
+                desktop.SetIsOnWithoutNotify(value);
+                UpdateAssignedTasks();
+            });
+        }
     }
 
     void UpdateAssignedTasks()
@@ -142,6 +168,14 @@ public class MissionPlanningUI : MonoBehaviour
             assignedTasksText.text = taskList;
         }
 
+        if (vrAssignedTasksText != null &&
+            vrAssignedTasksText.text != taskList)
+            vrAssignedTasksText.text = taskList;
+
+        if (vrAssignMissionButton != null)
+            vrAssignMissionButton.interactable =
+                selectedTasks.Count > 0 && !awaitingAcknowledgment;
+
         // Disable assignment when no tasks are selected.
         if (assignMissionButton != null)
         {
@@ -181,6 +215,7 @@ public class MissionPlanningUI : MonoBehaviour
             routeOverviewText.text =
                 string.Join("\n    ↓\n", destinations);
         }
+
 
         if (pageSwitcher != null)
             pageSwitcher.ShowProgress();
@@ -243,6 +278,7 @@ public class MissionPlanningUI : MonoBehaviour
 
     private void SetStatus(string status)
     {
+
         if (progressText != null &&
             progressText.text != status)
         {
@@ -401,6 +437,11 @@ public class MissionPlanningUI : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (assignMissionButton != null)
+            assignMissionButton.onClick.RemoveListener(AssignMission);
+        if (vrAssignMissionButton != null)
+            vrAssignMissionButton.onClick.RemoveListener(AssignMission);
+
         if (bridgeClient != null)
         {
             bridgeClient.OnMissionAcknowledgment -=

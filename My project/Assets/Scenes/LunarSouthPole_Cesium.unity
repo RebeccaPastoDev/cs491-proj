@@ -9719,7 +9719,7 @@ GameObject:
   - component: {fileID: 460721724}
   - component: {fileID: 460721725}
   m_Layer: 5
-  m_Name: CollectWaterToggle
+  m_Name: CollectWaterToggle(VR)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15884,7 +15884,7 @@ GameObject:
   - component: {fileID: 700692366}
   - component: {fileID: 700692367}
   m_Layer: 5
-  m_Name: FindWaterToggle
+  m_Name: FindWaterToggle(VR)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28907,15 +28907,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoverStatusUI
   roverStatus: {fileID: 2092221163}
-  roverPosition: {fileID: 0}
-  roverSpeed: {fileID: 0}
-  roverHeading: {fileID: 0}
+  roverPosition: {fileID: 1246909299}
+  roverSpeed: {fileID: 1040247432}
+  roverHeading: {fileID: 193010063}
   statusDot: {fileID: 514874920}
   missionProgress: {fileID: 1213768688}
   vrRoverStatus: {fileID: 2004766224}
-  vrRoverPosition: {fileID: 0}
-  vrRoverSpeed: {fileID: 0}
-  vrRoverHeading: {fileID: 0}
+  vrRoverPosition: {fileID: 345097206}
+  vrRoverSpeed: {fileID: 4690799}
+  vrRoverHeading: {fileID: 2055711926}
   vrStatusDot: {fileID: 2102071911}
   vrMissionProgress: {fileID: 1226093831}
   rover: {fileID: 1686150544}
@@ -28957,6 +28957,12 @@ MonoBehaviour:
   routeOverviewText: {fileID: 217972828}
   progressText: {fileID: 1460538731}
   pageSwitcher: {fileID: 1272063305}
+  vrFindWaterToggle: {fileID: 700692367}
+  vrCollectWaterToggle: {fileID: 460721725}
+  vrDepositWaterToggle: {fileID: 1417946179}
+  vrReturnToBaseToggle: {fileID: 1621301199}
+  vrAssignedTasksText: {fileID: 961601161}
+  vrAssignMissionButton: {fileID: 569923881}
   bridgeClient: {fileID: 1558779307}
 --- !u!1 &1279278508
 GameObject:
@@ -32310,7 +32316,7 @@ GameObject:
   - component: {fileID: 1417946178}
   - component: {fileID: 1417946179}
   m_Layer: 5
-  m_Name: DepositWaterToggle
+  m_Name: DepositWaterToggle(VR)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35357,6 +35363,9 @@ MonoBehaviour:
   lidarValidCount: 0
   lidarClosestDistance: 0
   lidarClosestAngle: 0
+  missionId: 
+  missionStatus: 
+  missionSource: 
   logTelemetry: 1
 --- !u!4 &1558779308
 Transform:
@@ -36429,7 +36438,7 @@ GameObject:
   - component: {fileID: 1621301198}
   - component: {fileID: 1621301199}
   m_Layer: 5
-  m_Name: ReturnToBaseToggle
+  m_Name: ReturnToBaseToggle(VR)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41259,7 +41268,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.05942949, y: 0.99496585, z: -0.02490599, w: 0.07675164}
   m_LocalPosition: {x: 0.004022933, y: 0.90774524, z: 0.0065312386}
-  m_LocalScale: {x: 1.0000204, y: 1, z: 1.0000204}
+  m_LocalScale: {x: 1.0000217, y: 1, z: 1.0000217}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 199494393}
@@ -41280,9 +41289,9 @@ MonoBehaviour:
   _detectTransformChanges: 1
   _localToGlobeFixedMatrix:
     c0:
-      x: -0.8898684899617901
-      y: 0.44051904934684594
-      z: 0.11881791747678389
+      x: -0.8898696568246383
+      y: 0.4405196269887317
+      z: 0.11881807327982125
       w: 0
     c1:
       x: -0.09793750815709346
@@ -41290,9 +41299,9 @@ MonoBehaviour:
       z: -0.9927330159385531
       w: 0
     c2:
-      x: 0.44562606087862644
-      y: 0.8950385606585657
-      z: 0.019080066947588306
+      x: 0.44562664521721185
+      y: 0.8950397343008015
+      z: 0.019080091966814754
       w: 0
     c3:
       x: -11313.626716083414
