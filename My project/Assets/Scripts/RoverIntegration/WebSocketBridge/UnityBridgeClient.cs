@@ -11,6 +11,11 @@ public class UnityBridgeClient : MonoBehaviour
     [Header("Bridge Connection")]
     public string serverUrl = "ws://127.0.0.1:8765";
     public bool connectOnStart = true;
+    public bool autoReconnect = true;
+    public float reconnectInterval = 3f;
+    private float nextReconnectTime;
+    private bool started;
+    private bool shuttingDown;
 
     [Header("Connection Status")]
     public bool isConnected;
@@ -40,6 +45,12 @@ public class UnityBridgeClient : MonoBehaviour
     public float lidarClosestDistance;
     public float lidarClosestAngle;
 
+    [Header("Bridge Mission")]
+    public string missionId;
+    public string missionStatus;
+    public string missionSource;
+    public int connectionGeneration { get; private set; }
+
     [Header("Debug Settings")]
     public bool logTelemetry = true;
 
@@ -62,6 +73,7 @@ public class UnityBridgeClient : MonoBehaviour
         public BatteryData battery;
         public OdometryData odometry;
         public LidarData lidar;
+        public MissionTelemetry mission;
     }
 
     [Serializable]
@@ -89,6 +101,14 @@ public class UnityBridgeClient : MonoBehaviour
         public float[] ranges_m;
     }
 
+    [Serializable]
+    public class MissionTelemetry
+    {
+        public string mission_id;
+        public string status;
+        public string source;
+    }
+
     private void ParseLidar(LidarData scan)
     {
         hasLidar = false;
@@ -113,8 +133,35 @@ public class UnityBridgeClient : MonoBehaviour
         hasLidar = lidarValidCount > 0;
     }
 
+    private void InvalidateTelemetry()
+    {
+        lastTelemetryTime = -1f;
+        hasOdometry = false;
+        hasBattery = false;
+        ParseLidar(null);
+        LatestTelemetryJson = null;
+        missionId = null;
+        missionStatus = null;
+        missionSource = null;
+        isLive = false;
+        physicalExecutionEnabled = false;
+    }
+
+    void Update()
+    {
+        if (lastTelemetryTime >= 0f && !TelemetryActive)
+            InvalidateTelemetry();
+
+        if (started && connectOnStart && autoReconnect && !shuttingDown &&
+            socket == null && Time.realtimeSinceStartup >= nextReconnectTime)
+        {
+            _ = ConnectToBridge();
+        }
+    }
+
     async void Start()
     {
+        started = true;
         if (connectOnStart)
         {
             await ConnectToBridge();
@@ -123,7 +170,7 @@ public class UnityBridgeClient : MonoBehaviour
 
     public async Task ConnectToBridge()
     {
-        if (socket != null)
+        if (socket != null || shuttingDown)
             return;
 
         ClientWebSocket client = new ClientWebSocket();
@@ -149,6 +196,7 @@ public class UnityBridgeClient : MonoBehaviour
                 tokenSource.Token
             );
 
+            connectionGeneration++;
             isConnected = true;
             connectionStatus = "Connected";
 
@@ -165,12 +213,13 @@ public class UnityBridgeClient : MonoBehaviour
             if (!tokenSource.IsCancellationRequested)
             {
                 connectionStatus = "Connection Error";
-                Debug.LogError("[Unity Bridge] " + e.Message);
+                Debug.LogWarning("[Unity Bridge] " + e.Message);
             }
         }
         finally
         {
             isConnected = false;
+            InvalidateTelemetry();
 
             if (connectionStatus != "Connection Error")
                 connectionStatus = "Disconnected";
@@ -180,6 +229,8 @@ public class UnityBridgeClient : MonoBehaviour
 
             socket = null;
             cancellation = null;
+            if (!shuttingDown)
+                nextReconnectTime = Time.realtimeSinceStartup + Mathf.Max(0.5f, reconnectInterval);
         }
     }
 
@@ -255,6 +306,9 @@ public class UnityBridgeClient : MonoBehaviour
 
                 lastTelemetryTime = Time.realtimeSinceStartup;
                 ParseLidar(message.lidar);
+                missionId = message.mission?.mission_id;
+                missionStatus = message.mission?.status;
+                missionSource = message.mission?.source;
                 hasBattery = message.battery != null;
                 hasOdometry = message.odometry != null;
                 if (hasOdometry)
@@ -358,6 +412,7 @@ public class UnityBridgeClient : MonoBehaviour
 
     private void OnDestroy()
     {
+        shuttingDown = true;
         cancellation?.Cancel();
         socket?.Abort();
         isConnected = false;

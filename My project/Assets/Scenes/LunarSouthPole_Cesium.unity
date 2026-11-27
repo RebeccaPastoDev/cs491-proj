@@ -28957,6 +28957,7 @@ MonoBehaviour:
   routeOverviewText: {fileID: 217972828}
   progressText: {fileID: 1460538731}
   pageSwitcher: {fileID: 1272063305}
+  bridgeClient: {fileID: 1558779307}
 --- !u!1 &1279278508
 GameObject:
   m_ObjectHideFlags: 0
@@ -35336,6 +35337,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnityBridgeClient
   serverUrl: ws://127.0.0.1:8765
   connectOnStart: 1
+  autoReconnect: 1
+  reconnectInterval: 3
   isConnected: 0
   connectionStatus: Disconnected
   telemetrySource: 
@@ -41256,7 +41259,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.05942949, y: 0.99496585, z: -0.02490599, w: 0.07675164}
   m_LocalPosition: {x: 0.004022933, y: 0.90774524, z: 0.0065312386}
-  m_LocalScale: {x: 1.0000188, y: 1, z: 1.0000188}
+  m_LocalScale: {x: 1.0000204, y: 1, z: 1.0000204}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 199494393}
@@ -41277,9 +41280,9 @@ MonoBehaviour:
   _detectTransformChanges: 1
   _localToGlobeFixedMatrix:
     c0:
-      x: -0.8898671109420605
-      y: 0.44051836667916283
-      z: 0.11881773334592154
+      x: -0.8898684899617901
+      y: 0.44051904934684594
+      z: 0.11881791747678389
       w: 0
     c1:
       x: -0.09793750815709346
@@ -41287,9 +41290,9 @@ MonoBehaviour:
       z: -0.9927330159385531
       w: 0
     c2:
-      x: 0.44562537029666194
-      y: 0.8950371736268325
-      z: 0.019080037379411587
+      x: 0.44562606087862644
+      y: 0.8950385606585657
+      z: 0.019080066947588306
       w: 0
     c3:
       x: -11313.626716083414

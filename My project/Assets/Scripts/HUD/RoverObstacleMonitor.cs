@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 
+[DefaultExecutionOrder(100)]
 public class RoverObstacleMonitor : MonoBehaviour
 {
     [Header("Rover References")]
@@ -23,7 +24,9 @@ public class RoverObstacleMonitor : MonoBehaviour
     public float bridgeCautionDistance = 0.5f;
     public float bridgeWarningDistance = 0.25f;
     public bool BridgeMode => telemetryHUD != null && telemetryHUD.useBridgeMode;
-    public bool BridgeScanAvailable { get; private set; }
+    public bool BridgeScanAvailable => BridgeMode && telemetryHUD.bridgeClient != null &&
+        telemetryHUD.bridgeClient.TelemetryActive && telemetryHUD.bridgeClient.hasLidar;
+    private bool? previousBridgeAvailability;
     public float ActiveCautionDistance => BridgeMode ? bridgeCautionDistance : cautionDistance;
     public float ActiveWarningDistance => BridgeMode ? bridgeWarningDistance : warningDistance;
 
@@ -48,7 +51,7 @@ public class RoverObstacleMonitor : MonoBehaviour
 
     void Update()
     {
-        BridgeScanAvailable = false;
+        if (!BridgeMode) previousBridgeAvailability = null;
         if (BridgeMode)
         {
             UpdateBridgeObstacle();
@@ -174,7 +177,12 @@ public class RoverObstacleMonitor : MonoBehaviour
     void UpdateBridgeObstacle()
     {
         var bridge = telemetryHUD.bridgeClient;
-        BridgeScanAvailable = bridge != null && bridge.TelemetryActive && bridge.hasLidar;
+        bool available = BridgeScanAvailable;
+        if (previousBridgeAvailability != available)
+        {
+            Debug.Log("[Bridge LiDAR] Scan available: " + available, this);
+            previousBridgeAvailability = available;
+        }
         HasObstacle = BridgeScanAvailable;
         ClosestObstacleDistance = BridgeScanAvailable ? bridge.lidarClosestDistance : Mathf.Infinity;
         ClosestObstacleDirection = "";

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
+[DefaultExecutionOrder(200)]
 public class RoverWarningManager : MonoBehaviour
 {
     [Header("Monitoring Scripts")]
@@ -89,7 +90,8 @@ public class RoverWarningManager : MonoBehaviour
 
         // Check selected LiDAR source.
         if (obstacleMonitor != null &&
-            obstacleMonitor.HasObstacle)
+            obstacleMonitor.HasObstacle &&
+            (!bridgeMode || obstacleMonitor.BridgeScanAvailable))
         {
             float distance =
                 obstacleMonitor.ClosestObstacleDistance;

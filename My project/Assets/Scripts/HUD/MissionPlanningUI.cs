@@ -1,3 +1,5 @@
+
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -22,11 +24,63 @@ public class MissionPlanningUI : MonoBehaviour
     [Header("Navigation")]
     public SwitchHUDPage pageSwitcher;
 
-    private readonly List<string> selectedTasks = new List<string>();
+    [Header("Unity Bridge")]
+    public UnityBridgeClient bridgeClient;
+
+    private bool awaitingAcknowledgment;
+    private float acknowledgmentDeadline;
+    private string pendingMissionId;
+    private string validatedMissionId;
+    private int submittedGeneration;
+    private bool submitted;
+    private string localStatus;
+
+    private readonly List<string> selectedTasks =
+        new List<string>();
+
+    [Serializable]
+    public class MissionWaypoint
+    {
+        public float x;
+        public float z;
+
+        public MissionWaypoint(float x, float z)
+        {
+            this.x = x;
+            this.z = z;
+        }
+    }
+
+    [Serializable]
+    public class MissionRequest
+    {
+        public string type = "mission_start";
+        public string schema_version = "1.0";
+        public string mission_id;
+        public string mission_name = "fetch_water";
+        public string coordinate_frame = "unity_world";
+        public MissionWaypoint[] waypoints;
+    }
+
+    [Serializable]
+    public class MissionAcknowledgment
+    {
+        public bool accepted;
+        public bool physical_execution_enabled;
+        public string error;
+        public MissionDetails mission;
+    }
+
+    [Serializable]
+    public class MissionDetails
+    {
+        public string mission_id;
+        public string status;
+        public bool execution_enabled;
+    }
 
     void Start()
     {
-        // Listen for task selection changes
         findWaterToggle.onValueChanged.AddListener(
             value => UpdateAssignedTasks());
 
@@ -39,10 +93,14 @@ public class MissionPlanningUI : MonoBehaviour
         returnToBaseToggle.onValueChanged.AddListener(
             value => UpdateAssignedTasks());
 
-        // Assign mission button
         assignMissionButton.onClick.AddListener(AssignMission);
 
-        // Initialize assigned tasks
+        if (bridgeClient != null)
+        {
+            bridgeClient.OnMissionAcknowledgment +=
+                HandleMissionAcknowledgment;
+        }
+
         UpdateAssignedTasks();
     }
 
@@ -50,7 +108,6 @@ public class MissionPlanningUI : MonoBehaviour
     {
         selectedTasks.Clear();
 
-        // Add selected tasks in mission order
         if (findWaterToggle.isOn)
             selectedTasks.Add("Find Water");
 
@@ -63,33 +120,46 @@ public class MissionPlanningUI : MonoBehaviour
         if (returnToBaseToggle.isOn)
             selectedTasks.Add("Return to Base");
 
-        // Update Planning page
+        string taskList = "";
+
         if (selectedTasks.Count == 0)
         {
-            assignedTasksText.text = "No tasks selected";
+            taskList = "No tasks selected";
         }
         else
         {
-            assignedTasksText.text = "";
-
             for (int i = 0; i < selectedTasks.Count; i++)
             {
-                assignedTasksText.text +=
+                taskList +=
                     $"{i + 1:00} {selectedTasks[i]}\n";
             }
         }
 
-        // Disable assignment when no tasks are selected
-        assignMissionButton.interactable =
-            selectedTasks.Count > 0;
+        // Only update the displayed text when it changes.
+        if (assignedTasksText != null &&
+            assignedTasksText.text != taskList)
+        {
+            assignedTasksText.text = taskList;
+        }
+
+        // Disable assignment when no tasks are selected.
+        if (assignMissionButton != null)
+        {
+            assignMissionButton.interactable =
+                selectedTasks.Count > 0 &&
+                !awaitingAcknowledgment;
+        }
     }
 
-    public void AssignMission()
+    public async void AssignMission()
     {
-        if (selectedTasks.Count == 0)
+        // Refresh the selected tasks before submission.
+        UpdateAssignedTasks();
+
+        if (selectedTasks.Count == 0 ||
+            awaitingAcknowledgment)
             return;
 
-        // Build route overview
         List<string> destinations = new List<string>();
 
         destinations.Add("Base Camp");
@@ -106,23 +176,235 @@ public class MissionPlanningUI : MonoBehaviour
         if (returnToBaseToggle.isOn)
             destinations.Add("Base Camp");
 
-        // Update Progress page route
         if (routeOverviewText != null)
         {
             routeOverviewText.text =
                 string.Join("\n    ↓\n", destinations);
         }
 
-        // Reset mission progress display
-        if (progressText != null)
+        if (pageSwitcher != null)
+            pageSwitcher.ShowProgress();
+
+        if (bridgeClient == null ||
+            !bridgeClient.TelemetryActive)
         {
-            progressText.text = "Assigned - Not started";
+            SetStatus("Bridge unavailable");
+            return;
         }
 
-        // Automatically open Mission Progress page
-        if (pageSwitcher != null)
+        // Only allow recorded-data validation.
+        if (bridgeClient.isLive ||
+            bridgeClient.physicalExecutionEnabled ||
+            bridgeClient.telemetrySource != "recorded")
         {
-            pageSwitcher.ShowProgress();
+            SetStatus("Test mode required");
+            return;
+        }
+
+        pendingMissionId =
+            "fetch_water_" + Guid.NewGuid().ToString("N");
+
+        submittedGeneration =
+            bridgeClient.connectionGeneration;
+
+        submitted = true;
+        validatedMissionId = null;
+        localStatus = null;
+
+        MissionRequest mission = new MissionRequest
+        {
+            mission_id = pendingMissionId,
+
+            // Valid temporary sample waypoints.
+            waypoints = new MissionWaypoint[]
+            {
+                new MissionWaypoint(0f, 0f),
+                new MissionWaypoint(0f, 10f),
+                new MissionWaypoint(10f, 10f),
+                new MissionWaypoint(10f, 30f)
+            }
+        };
+
+        awaitingAcknowledgment = true;
+
+        acknowledgmentDeadline =
+            Time.realtimeSinceStartup + 10f;
+
+        UpdateAssignedTasks();
+
+        SetStatus("Awaiting acknowledgment");
+
+        string json = JsonUtility.ToJson(mission);
+
+        Debug.Log("[Mission Planning] Sending: " + json);
+
+        await bridgeClient.SendMessageToBridge(json);
+    }
+
+    private void SetStatus(string status)
+    {
+        if (progressText != null &&
+            progressText.text != status)
+        {
+            progressText.text = status;
+        }
+    }
+
+    void Update()
+    {
+        // Keep task selection independent of bridge status.
+        UpdateAssignedTasks();
+
+        // Handle connection loss.
+        if (bridgeClient == null ||
+            !bridgeClient.TelemetryActive)
+        {
+            if (awaitingAcknowledgment)
+            {
+                awaitingAcknowledgment = false;
+
+                localStatus =
+                    "Submission interrupted - reassign mission";
+
+                UpdateAssignedTasks();
+            }
+
+            SetStatus("Bridge unavailable");
+            return;
+        }
+
+        // Detect bridge reconnection.
+        if (submitted &&
+            submittedGeneration !=
+            bridgeClient.connectionGeneration)
+        {
+            submitted = false;
+            awaitingAcknowledgment = false;
+            validatedMissionId = null;
+
+            localStatus =
+                "Mission state reset - reassign mission";
+
+            UpdateAssignedTasks();
+        }
+
+        // Handle acknowledgment timeout.
+        if (awaitingAcknowledgment)
+        {
+            if (Time.realtimeSinceStartup <
+                acknowledgmentDeadline)
+            {
+                SetStatus("Awaiting acknowledgment");
+                return;
+            }
+
+            awaitingAcknowledgment = false;
+            localStatus = "Acknowledgment timeout";
+
+            UpdateAssignedTasks();
+        }
+
+        // Synchronize mission status.
+        if (validatedMissionId != null &&
+            bridgeClient.missionId == validatedMissionId &&
+            bridgeClient.missionStatus == "validated" &&
+            bridgeClient.missionSource == "mock")
+        {
+            SetStatus(
+                bridgeClient.physicalExecutionEnabled ||
+                bridgeClient.isLive
+                    ? "Test mode required"
+                    : "Validated - Execution disabled");
+        }
+        else if (localStatus != null)
+        {
+            SetStatus(localStatus);
+        }
+        else if (validatedMissionId != null)
+        {
+            SetStatus("Awaiting mission telemetry");
+        }
+        else if (bridgeClient.missionStatus == "idle")
+        {
+            SetStatus("No mission assigned");
+        }
+        else
+        {
+            SetStatus("Mission status unavailable");
+        }
+    }
+
+    private void HandleMissionAcknowledgment(string json)
+    {
+        if (!awaitingAcknowledgment ||
+            bridgeClient.connectionGeneration !=
+            submittedGeneration)
+        {
+            return;
+        }
+
+        MissionAcknowledgment ack;
+
+        try
+        {
+            ack =
+                JsonUtility.FromJson<MissionAcknowledgment>(
+                    json);
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning(
+                "[Mission Planning] Invalid acknowledgment: " +
+                e.Message);
+
+            return;
+        }
+
+        if (ack == null)
+            return;
+
+        if (ack.accepted &&
+            (ack.mission == null ||
+             ack.mission.mission_id != pendingMissionId))
+        {
+            return;
+        }
+
+        awaitingAcknowledgment = false;
+
+        // Handle rejected missions.
+        if (!ack.accepted)
+        {
+            localStatus = "Mission rejected";
+
+            Debug.LogWarning(
+                "[Mission Planning] Rejected: " + ack.error);
+        }
+        else if (ack.physical_execution_enabled ||
+                 ack.mission.execution_enabled)
+        {
+            localStatus = "Unexpected execution mode";
+        }
+        else
+        {
+            validatedMissionId = ack.mission.mission_id;
+            localStatus = null;
+        }
+
+        Debug.Log("[Mission Planning] Response: " + json);
+
+        SetStatus(
+            localStatus ?? "Awaiting mission telemetry");
+
+        UpdateAssignedTasks();
+    }
+
+    private void OnDestroy()
+    {
+        if (bridgeClient != null)
+        {
+            bridgeClient.OnMissionAcknowledgment -=
+                HandleMissionAcknowledgment;
         }
     }
 }
